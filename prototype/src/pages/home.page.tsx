@@ -200,7 +200,7 @@ export default function HomePage() {
               transitionDuration: 'var(--duration-fade)',
             }}
           >
-            {flipped ? '这题也不想?再抽一张吧' : '不想答这题?点击翻面'}
+            {flipped ? '这题也不想？再抽一张吧' : '不想答这题？点击翻面'}
           </p>
           <button
             type="button"
