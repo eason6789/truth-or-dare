@@ -120,14 +120,11 @@ function HandMark({ className }: { className?: string }) {
 function CardFace({
   face,
   inverse,
-  hint,
   className,
   style,
 }: {
   face: CardFaceData;
   inverse: boolean;
-  /** 面底交互提示:正面「不想答这题？点击翻面」/ 背面「这题也不想？再抽一张吧」 */
-  hint: string;
   className?: string;
   style?: CSSProperties;
 }) {
@@ -275,7 +272,7 @@ function CardFace({
         </div>
       </div>
 
-      {/* 底部小字 + 本面交互提示 */}
+      {/* 底部小字(提示语由外层页面统一渲染为弱化小字) */}
       <div className="relative z-10 flex flex-col gap-tight px-base pb-tight">
         <div className="flex items-center justify-between">
           <span
@@ -291,17 +288,6 @@ function CardFace({
             KIDULT
           </span>
         </div>
-        <p
-          className="text-center font-zh text-caption"
-          style={{
-            color: `${hsl(sub)}`,
-            opacity: inverse ? 0.85 : 0.9,
-            fontSize: '12px',
-            letterSpacing: '0.02em',
-          }}
-        >
-          {hint}
-        </p>
       </div>
     </div>
   );
@@ -328,8 +314,8 @@ export function FlipCard({ card, flipped, onFlip, className, style }: FlipCardPr
           WebkitTapHighlightColor: 'transparent',
         }}
       >
-        <CardFace face={card.front} inverse={false} hint="不想答这题？点击翻面" />
-        <CardFace face={card.back} inverse hint="这题也不想？再抽一张吧" style={{ transform: 'rotateY(180deg)' }} />
+        <CardFace face={card.front} inverse={false} />
+        <CardFace face={card.back} inverse style={{ transform: 'rotateY(180deg)' }} />
       </button>
     </div>
   );

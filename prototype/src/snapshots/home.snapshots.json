@@ -2,44 +2,84 @@
   "page": "home",
   "snapshots": [
     {
-      "id": "home-bucket-idle",
-      "name": "Bucket Screen — Idle State",
-      "purpose": "Baseline: user sees signing bucket with breathing animation, ready to draw. Tests bucket UI chrome, footer text, and initial interactivity.",
+      "id": "home-baseline",
+      "name": "Bucket Screen — Initial State",
+      "purpose": "Default landing state: bucket interface, idle, no draws yet. Baseline for review of bucket screen layout, header, bucket button, footer messaging.",
       "priority": "p0",
       "state": {
         "screen": "bucket",
         "drawPhase": "idle",
         "stickIndex": 0,
         "flipped": false,
-        "drawCount": 0
+        "drawCount": 0,
+        "recent": []
       }
     },
     {
       "id": "home-card-revealed",
-      "name": "Card Screen — Revealed State",
-      "purpose": "User has drawn and card is showing. Tests card render, flip affordance, return button, dark gradient background, and revealed phase interaction rules.",
+      "name": "Card Screen — After Draw",
+      "purpose": "Review card display after successful draw: switched to card screen, drawPhase=revealed, card flipped=false (front), drawCount incremented, recent includes drawn stick. Shows primary card interface and interaction state.",
       "priority": "p0",
       "state": {
         "screen": "card",
         "drawPhase": "revealed",
-        "stickIndex": 1,
+        "stickIndex": 0,
         "flipped": false,
-        "drawCount": 1
+        "drawCount": 1,
+        "recent": [
+          0
+        ]
       }
     },
     {
-      "id": "home-card-flipped",
-      "name": "Card Screen — Flipped Back Face",
-      "purpose": "User has flipped the card to see the back (red) face. Tests card rotation/animation state and alternate face content.",
+      "id": "home-card-back-flipped",
+      "name": "Card Screen — Back Side Visible",
+      "purpose": "Card flipped to back (red question side). Tests flip state toggle and footer hint text change to 'not want this one' variant. Validates flip interaction branch.",
       "priority": "p1",
       "state": {
         "screen": "card",
         "drawPhase": "revealed",
-        "stickIndex": 1,
+        "stickIndex": 0,
         "flipped": true,
-        "drawCount": 1
+        "drawCount": 1,
+        "recent": [
+          0
+        ]
+      }
+    },
+    {
+      "id": "home-card-returning",
+      "name": "Card Screen — Return Animation",
+      "purpose": "drawPhase=returning state during card flyback animation. Tests animation class and button disabled state during return. Validates return phase visual state.",
+      "priority": "p1",
+      "state": {
+        "screen": "card",
+        "drawPhase": "returning",
+        "stickIndex": 0,
+        "flipped": false,
+        "drawCount": 1,
+        "recent": [
+          0
+        ]
+      }
+    },
+    {
+      "id": "home-bucket-multi-draw",
+      "name": "Bucket Screen — After Multiple Draws",
+      "purpose": "Back at bucket screen after returning: drawCount=2, recent tracking multiple indices, footer metrics updated. Tests state recovery and metrics display after round-trip.",
+      "priority": "p1",
+      "state": {
+        "screen": "bucket",
+        "drawPhase": "idle",
+        "stickIndex": 0,
+        "flipped": false,
+        "drawCount": 2,
+        "recent": [
+          0,
+          1
+        ]
       }
     }
   ],
-  "_zkStateBundleSha256": "644b6344f0ba6f54ae67bf0b8621d587149c37898ad987557f17090d9c3d71f7"
+  "_zkStateBundleSha256": "1c64c4e2bfb92f7682c49e0acba34c7ece5657bb4a9d2049736735780d4ac753"
 }

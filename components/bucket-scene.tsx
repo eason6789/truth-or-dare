@@ -1,14 +1,17 @@
 import { useState } from 'react';
 
 /**
- * 签桶场景:白色圆柱签桶 + 从桶口扇形伸出的红色签条。
+ * 签桶场景:白色圆柱签桶 + 从桶口扇形伸出的签条。
  * 纯展示组件,通过 props 接收状态与回调,不持有应用状态。
  *
- * 设计坐标系(viewBox 0 0 240 360):
- *  - 签条围绕一个共同铰点 PIVOT(120, 116)旋转,底端正好探进桶口,
- *    任何角度下都不会出现"悬浮断头"。
- *  - 桶口椭圆中心 (120, 132),半径 rx 70 / ry 15,所有签条底端被桶口盖住。
- *  - 签条用二次贝塞尔微弯(手绘感),顶端圆角 rx=9。
+ * 设计坐标系(viewBox 0 0 240 380):
+ *  - 穿插关系(图层自底向上):地面投影 → 桶后沿内壁 → 签条(根部伸入桶口)
+ *    → 桶前壁(盖住签条根部) → 前沿描边。签条视觉上从桶口内部"长出来"。
+ *  - 桶口用椭圆表现开口透视:后沿弧在签条后,前壁压住签条根部。
+ *  - 签条围绕铰点 PIVOT(120, 122)旋转,底端探入桶内 84px,
+ *    任何角度下根部都被前壁遮住,无悬浮断头。
+ *  - 签条露出部分是白面卡顶:奶油白卡面 + 朱红圆角顶端(与实体卡一致),
+ *    而不是整根红签。
  */
 
 export interface StripSpec {
@@ -20,23 +23,30 @@ export interface StripSpec {
   breatheDelay: number;
 }
 
+/** 扇形收敛至 ±28°,高低错落,根部全部没入桶口 */
 export const BUCKET_STRIPS: StripSpec[] = [
-  { angle: -58, len: 108, breatheDelay: 0 },
-  { angle: -42, len: 138, breatheDelay: 420 },
-  { angle: -27, len: 116, breatheDelay: 900 },
-  { angle: -13, len: 150, breatheDelay: 220 },
-  { angle: 0, len: 126, breatheDelay: 640 },
-  { angle: 13, len: 148, breatheDelay: 1080 },
-  { angle: 27, len: 114, breatheDelay: 60 },
-  { angle: 42, len: 136, breatheDelay: 760 },
-  { angle: 58, len: 106, breatheDelay: 340 },
+  { angle: -28, len: 96, breatheDelay: 0 },
+  { angle: -20, len: 124, breatheDelay: 420 },
+  { angle: -12, len: 104, breatheDelay: 900 },
+  { angle: -5, len: 132, breatheDelay: 220 },
+  { angle: 2, len: 112, breatheDelay: 640 },
+  { angle: 9, len: 130, breatheDelay: 1080 },
+  { angle: 16, len: 102, breatheDelay: 60 },
+  { angle: 23, len: 120, breatheDelay: 760 },
+  { angle: 28, len: 94, breatheDelay: 340 },
 ];
 
 const PIVOT_X = 120;
-const PIVOT_Y = 116;
+const PIVOT_Y = 122;
 const STRIP_W = 24;
-/** 签条底端探进桶口的深度(被桶体盖住的部分) */
-const STRIP_IN = 52;
+/** 签条底端探进桶内的深度(被桶前壁盖住的部分) */
+const STRIP_IN = 84;
+
+/* 桶口 / 桶身几何(敦实比例:口径 150,身高约 196) */
+const RIM_CY = 122;
+const RIM_RX = 75;
+const RIM_RY = 14;
+const RIM_TOP = RIM_CY - RIM_RY; // 108
 
 function stripPath(len: number): string {
   const top = PIVOT_Y - len;
@@ -56,27 +66,25 @@ function stripPath(len: number): string {
   ].join(' ');
 }
 
-function StripShape({ highlight = false }: { highlight?: boolean }) {
+/** 签条白面卡顶上的红色小涂鸦(爱心 + 弧线,呼应实体卡背面图案) */
+function StripTopMark({ highlight = false }: { highlight?: boolean }) {
   return (
-    <>
-      <rect
-        x={-STRIP_W / 2 + 4}
-        y={-14}
-        width={STRIP_W - 8}
-        height={7}
-        rx={3.5}
-        style={{
-          fill: highlight ? 'hsl(var(--color-text-inverse))' : 'hsl(var(--color-text-inverse) / 0.88)',
-        }}
-      />
+    <g
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      style={{
+        stroke: highlight
+          ? 'hsl(var(--color-brand-primary))'
+          : 'hsl(var(--color-brand-primary) / 0.85)',
+      }}
+    >
       <path
-        d={`M ${-STRIP_W / 2 + 5} 6 Q 0 12 ${STRIP_W / 2 - 5} 6`}
-        fill="none"
-        strokeWidth={2.4}
-        strokeLinecap="round"
-        style={{ stroke: 'hsl(var(--color-text-inverse) / 0.75)' }}
+        d="M0 4.2c-2.1-1.5-3.6-3-3.6-4.8 0-1.4 1-2.4 2.3-2.4.6 0 1.1.3 1.3.8.2-.5.7-.8 1.3-.8 1.3 0 2.3 1 2.3 2.4 0 1.8-1.5 3.3-3.6 4.8z"
+        strokeWidth={1.5}
       />
-    </>
+      <path d="M -7 9.5 Q 0 13 7 9.5" strokeWidth={1.8} />
+    </g>
   );
 }
 
@@ -96,13 +104,13 @@ export function BucketScene({ breathing, shaking, drawing, className }: BucketSc
 
   return (
     <svg
-      viewBox="0 0 240 360"
+      viewBox="0 0 240 380"
       role="img"
       aria-label="插满签条的白色签桶"
       className={`${className ?? ''} ${shaking ? 'anim-bucket-shake' : ''}`}
       style={{
         overflow: 'visible',
-        transformOrigin: '50% 82%',
+        transformOrigin: '50% 86%',
         transform: pressed ? 'scale(0.97)' : 'scale(1)',
         transition: 'transform 180ms var(--ease-spring-out)',
       }}
@@ -110,23 +118,37 @@ export function BucketScene({ breathing, shaking, drawing, className }: BucketSc
       onPointerUp={() => setPressed(false)}
       onPointerLeave={() => setPressed(false)}
     >
-      {/* 地面投影 */}
+      {/* 地面投影(柔和落地) */}
       <ellipse
         cx={120}
-        cy={334}
-        rx={88}
+        cy={356}
+        rx={90}
         ry={13}
         style={{ fill: 'hsl(var(--color-text-primary) / 0.10)' }}
       />
       <ellipse
         cx={120}
-        cy={332}
-        rx={64}
-        ry={9}
-        style={{ fill: 'hsl(var(--color-text-primary) / 0.07)' }}
+        cy={354}
+        rx={62}
+        ry={8.5}
+        style={{ fill: 'hsl(var(--color-text-primary) / 0.08)' }}
       />
 
-      {/* 签条层(在桶体之后,底端被桶口遮住) */}
+      {/* 桶后沿内壁:桶口椭圆的上半弧(在签条后面,暗示桶口深度) */}
+      <path
+        d={`M ${120 - RIM_RX} ${RIM_CY} A ${RIM_RX} ${RIM_RY} 0 0 1 ${120 + RIM_RX} ${RIM_CY}`}
+        fill="none"
+        strokeWidth={2}
+        style={{ stroke: 'hsl(var(--color-surface-doodle-light))' }}
+      />
+      <path
+        d={`M ${120 - RIM_RX + 6} ${RIM_CY} A ${RIM_RX - 6} ${RIM_RY - 3.5} 0 0 1 ${120 + RIM_RX - 6} ${RIM_CY}`}
+        fill="none"
+        strokeWidth={1.5}
+        style={{ stroke: 'hsl(var(--color-surface-doodle-light) / 0.55)' }}
+      />
+
+      {/* 签条层:根部伸入桶口,之后被桶前壁遮住 */}
       <g>
         {BUCKET_STRIPS.map((strip, i) => {
           const isHighlighted = drawing && i === highlightIndex;
@@ -148,22 +170,34 @@ export function BucketScene({ breathing, shaking, drawing, className }: BucketSc
                 className={breathing && !drawing ? 'anim-strip-breathe' : ''}
                 style={{ animationDelay: `${strip.breatheDelay}ms` }}
               >
+                {/* 白面卡身(露出桶口的部分是奶油白卡面) */}
                 <path
                   d={stripPath(strip.len)}
                   strokeWidth={1.5}
                   style={{
-                    fill: 'hsl(var(--color-brand-primary))',
-                    stroke: 'hsl(var(--color-surface-doodle-dark))',
-                    opacity: drawing && !isHighlighted ? 0.45 : 1,
+                    fill: 'hsl(var(--color-surface-front))',
+                    stroke: 'hsl(var(--color-surface-doodle-light))',
+                    opacity: drawing && !isHighlighted ? 0.5 : 1,
                     transition: 'opacity var(--duration-fade) var(--ease-fade)',
                   }}
                 />
-                <g
-                  transform={`translate(${PIVOT_X} ${PIVOT_Y - strip.len + 34}) rotate(${
-                    strip.angle > 0 ? -4 : 4
-                  })`}
-                >
-                  <StripShape highlight={isHighlighted} />
+                {/* 红色圆角卡顶(实体卡的红色顶端) */}
+                <rect
+                  x={PIVOT_X - STRIP_W / 2 + 3.5}
+                  y={PIVOT_Y - strip.len + 3.5}
+                  width={STRIP_W - 7}
+                  height={17}
+                  rx={6}
+                  style={{
+                    fill: isHighlighted
+                      ? 'hsl(var(--color-brand-primary))'
+                      : 'hsl(var(--color-brand-primary) / 0.92)',
+                    opacity: drawing && !isHighlighted ? 0.5 : 1,
+                    transition: 'opacity var(--duration-fade) var(--ease-fade)',
+                  }}
+                />
+                <g transform={`translate(${PIVOT_X} ${PIVOT_Y - strip.len + 42})`}>
+                  <StripTopMark highlight={isHighlighted} />
                 </g>
               </g>
             </g>
@@ -171,17 +205,17 @@ export function BucketScene({ breathing, shaking, drawing, className }: BucketSc
         })}
       </g>
 
-      {/* 桶体:白色圆柱,手绘感描边 */}
+      {/* 桶前壁:盖住签条根部,签条从桶口内部"长出来" */}
       <g>
-        {/* 桶身 */}
         <path
           d={[
-            `M 50 132`,
-            `L 55 300`,
-            `Q 56 322 78 326`,
-            `Q 120 333 162 326`,
-            `Q 184 322 185 300`,
-            `L 190 132`,
+            `M ${120 - RIM_RX} ${RIM_CY}`,
+            `A ${RIM_RX} ${RIM_RY} 0 0 0 ${120 + RIM_RX} ${RIM_CY}`,
+            `L 188 320`,
+            `Q 187 342 165 347`,
+            `Q 120 355 75 347`,
+            `Q 53 342 52 320`,
+            'Z',
           ].join(' ')}
           strokeWidth={2}
           style={{
@@ -189,16 +223,31 @@ export function BucketScene({ breathing, shaking, drawing, className }: BucketSc
             stroke: 'hsl(var(--color-surface-doodle-light))',
           }}
         />
+        {/* 左侧高光(白色柱体的圆柱体感) */}
+        <path
+          d="M 63 142 Q 60 230 66 312"
+          fill="none"
+          strokeWidth={6}
+          strokeLinecap="round"
+          style={{ stroke: 'hsl(var(--color-surface-front) / 0.9)' }}
+        />
+        <path
+          d="M 72 148 Q 69.5 228 74 306"
+          fill="none"
+          strokeWidth={2.2}
+          strokeLinecap="round"
+          style={{ stroke: 'hsl(var(--color-surface-front) / 0.65)' }}
+        />
         {/* 桶身两条手绘箍线 */}
         <path
-          d="M 52.5 196 Q 120 208 187.5 196"
+          d="M 51.5 208 Q 120 220 188.5 208"
           fill="none"
           strokeWidth={2}
           strokeLinecap="round"
           style={{ stroke: 'hsl(var(--color-surface-doodle-light))' }}
         />
         <path
-          d="M 54.5 246 Q 120 258 185.5 246"
+          d="M 53.5 262 Q 120 274 186.5 262"
           fill="none"
           strokeWidth={2}
           strokeLinecap="round"
@@ -206,47 +255,27 @@ export function BucketScene({ breathing, shaking, drawing, className }: BucketSc
         />
         {/* 桶身中央小爱心涂鸦 */}
         <path
-          d="M120 232 c-3.2-4.4-10.4-2.6-10.4 2.6 0 4.6 6.4 8.6 10.4 11.8 4-3.2 10.4-7.2 10.4-11.8 0-5.2-7.2-7-10.4-2.6z"
+          d="M120 236 c-3.2-4.4-10.4-2.6-10.4 2.6 0 4.6 6.4 8.6 10.4 11.8 4-3.2 10.4-7.2 10.4-11.8 0-5.2-7.2-7-10.4-2.6z"
           fill="none"
           strokeWidth={2.2}
           strokeLinejoin="round"
           style={{ stroke: 'hsl(var(--color-brand-primary) / 0.55)' }}
         />
-        {/* 桶口外沿(盖住签条底端) */}
-        <ellipse
-          cx={120}
-          cy={132}
-          rx={70}
-          ry={15}
-          strokeWidth={2}
-          style={{
-            fill: 'hsl(var(--color-text-inverse))',
-            stroke: 'hsl(var(--color-surface-doodle-light))',
-          }}
-        />
-        {/* 桶口内沿(深色,暗示桶的深度) */}
-        <ellipse
-          cx={120}
-          cy={132}
-          rx={56}
-          ry={10.5}
-          style={{ fill: 'hsl(var(--color-surface-doodle-light) / 0.65)' }}
-        />
-        {/* 桶口内再压一圈签条根部颜色,让签条"插进桶里" */}
-        <ellipse
-          cx={120}
-          cy={133}
-          rx={44}
-          ry={8}
-          style={{ fill: 'hsl(var(--color-surface-doodle-dark) / 0.35)' }}
-        />
-        {/* 桶口高光 */}
+        {/* 桶口前沿描边(强化开口透视,压在签条根部之上) */}
         <path
-          d="M 56 128 Q 78 120 104 119.5"
+          d={`M ${120 - RIM_RX} ${RIM_CY} A ${RIM_RX} ${RIM_RY} 0 0 0 ${120 + RIM_RX} ${RIM_CY}`}
           fill="none"
-          strokeWidth={2.4}
+          strokeWidth={2}
           strokeLinecap="round"
-          style={{ stroke: 'hsl(var(--color-text-inverse))' }}
+          style={{ stroke: 'hsl(var(--color-surface-doodle-light))' }}
+        />
+        {/* 桶口左上高光 */}
+        <path
+          d={`M ${120 - RIM_RX + 9} ${RIM_TOP + 3} Q 92 ${RIM_TOP - 2} 70 ${RIM_TOP + 1.5}`}
+          fill="none"
+          strokeWidth={2.2}
+          strokeLinecap="round"
+          style={{ stroke: 'hsl(var(--color-surface-doodle-light) / 0.8)' }}
         />
       </g>
     </svg>
