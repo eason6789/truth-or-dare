@@ -1,0 +1,169 @@
+{
+  "brand": {
+    "name": "孩子气",
+    "title": "孩子气·真心话大冒险",
+    "slogan": "你这样看世界啊"
+  },
+  "sticks": [
+    {
+      "front": { "q": "你喜欢自己的原生家庭吗？为什么？", "qe": "Do you like your family of origin? Why?" },
+      "back": { "q": "你是否相信命中注定？", "qe": "Do you believe in destiny?", "s": "努力一定有结果、出身决定命运、一见钟情、有情人必终成眷属", "se": "effort always yields results, birth determines fate, love at first sight, true lovers will end up together" }
+    },
+    {
+      "front": { "q": "一个人恋爱的次数越多就越成熟吗？", "qe": "Does a person become more mature the more times they've been in love?", "s": "有魅力、值得信任、不靠谱、有城府", "se": "charming, trustworthy, unreliable, scheming" },
+      "back": { "q": "你穿越回唐朝变成了一个侠客，会去做什么？", "qe": "If you traveled back to the Tang Dynasty as a swordsman, what would you do?" }
+    },
+    {
+      "front": { "q": "你的第一份工作是什么时候？发生了什么？", "qe": "What was your first job? What happened?" },
+      "back": { "q": "你最想去什么地方旅行？", "qe": "Where do you most want to travel?" }
+    },
+    {
+      "front": { "q": "你小时候有什么习惯？现在呢？", "qe": "What habits did you have as a child? How about now?" },
+      "back": { "q": "你被别人霸凌过吗？发生了什么？", "qe": "Were you ever bullied? What happened?" }
+    },
+    {
+      "front": { "q": "你最引以为傲的事情是？", "qe": "What is the thing you are most proud of?" },
+      "back": { "q": "你有什么底线？怎么形成的？", "qe": "What are your bottom lines and how were they formed?" }
+    },
+    {
+      "front": { "q": "我妈给我50万让我们必须分手，你咋办？", "qe": "If my mom offered you 500,000 to break up with me, what would you do?" },
+      "back": { "q": "有哪些地方你很想和我一起去？", "qe": "What places do you really want to go with me?" }
+    },
+    {
+      "front": { "q": "你认为满足哪些条件两个人才会结婚？", "qe": "What conditions do you think two people must meet to get married?" },
+      "back": { "q": "当我在你身边时，你感觉如何？", "qe": "How do you feel when I am by your side?" }
+    },
+    {
+      "front": { "q": "安排一场约会要准备哪些事情？", "qe": "What preparations are needed to arrange a date?", "s": "朋友聚会、求婚、大餐、婚礼", "se": "friends' gathering, marriage proposal, delicious feast, wedding" },
+      "back": { "q": "如果谈恋爱要考证，你认为会考什么？", "qe": "If dating required a certificate exam, what do you think it would test?" }
+    },
+    {
+      "front": { "q": "假如联系不到我，你会怎么办？", "qe": "If you can't get in touch with me, what would you do?" },
+      "back": { "q": "你最想学习的语言是什么？", "qe": "What is the language you most want to learn?" }
+    },
+    {
+      "front": { "q": "有一个按钮可以让我们永不吵架，你会按吗？", "qe": "If there was a button that could make us never argue again, would you press it?" },
+      "back": { "q": "你的爱情观是否受到了原生家庭的影响？", "qe": "Has your view of love been influenced by your family of origin?" }
+    },
+    {
+      "front": { "q": "长途旅行时，你是那个做攻略的人吗？", "qe": "During long trips, are you the one who makes the travel plans?" },
+      "back": { "q": "有趣的灵魂和美好的外表，你更爱哪个？", "qe": "Which do you prefer, an interesting soul or a beautiful appearance?" }
+    },
+    {
+      "front": { "q": "亲亲我，抱抱我", "qe": "KISS ME, HUG ME" },
+      "back": { "q": "大声地夸我吧！", "qe": "PRAISE ME LOUDLY!" }
+    },
+    {
+      "front": { "q": "爱一个人是什么感觉？", "qe": "What does it feel like to love someone?" },
+      "back": { "q": "儿时你最喜欢的玩具是什么？", "qe": "What was your favorite toy in childhood?" }
+    },
+    {
+      "front": { "q": "你是因为我倾城的容貌才喜欢我的吗？", "qe": "Do you like me because of my breathtaking beauty?" },
+      "back": { "q": "我做过什么让你觉得浪漫的事？", "qe": "What have I done that you found romantic?" }
+    },
+    {
+      "front": { "q": "猜猜你的哪些行为让我小鹿乱撞？", "qe": "Guess which of your actions make my heart flutter?" },
+      "back": { "q": "被迫异地6个月，我们要怎么保持感情恒温？", "qe": "If we are forced to separate for 6 months, how do we maintain sweetness?" }
+    },
+    {
+      "front": { "q": "愿望卡", "qe": "WISH CARD" },
+      "back": { "q": "愿望卡", "qe": "WISH CARD" }
+    },
+    {
+      "front": { "q": "你希望自己10年后是什么样？", "qe": "What do you hope to be like in 10 years?" },
+      "back": { "q": "假如我是大明星，我的粉丝阻止我们在一起，你咋办？", "qe": "If I were a superstar and my fans prevented us from being together, what would you do?" }
+    },
+    {
+      "front": { "q": "你最近遇到了哪些让你成长的事？", "qe": "What things that make you grow have happened recently?" },
+      "back": { "q": "对于我们的未来，你有哪些不确定的事？", "qe": "What uncertainties do you have about our future?" }
+    },
+    {
+      "front": { "q": "你见过的幸福婚姻是什么样？", "qe": "What does a happy marriage you've seen look like?" },
+      "back": { "q": "如果我们在游戏里生活一周，你会选哪个？", "qe": "If we were to live in a game for a week, which one would you choose?" }
+    },
+    {
+      "front": { "q": "如果我们互换身体，你会怎么办？", "qe": "If our bodies were switched, what would you do?" },
+      "back": { "q": "你如何看待彩礼？周围的人呢？", "qe": "How do you view the bride price? What about the people around you?" }
+    },
+    {
+      "front": { "q": "说说你童年3个很丢脸的瞬间吧", "qe": "Tell me about three embarrassing moments from your childhood" },
+      "back": { "q": "制定一个我们专属的节日，你会选哪天？", "qe": "Design a special holiday just for us, which day would you choose?" }
+    },
+    {
+      "front": { "q": "如果我的收入远高于你，你会不平衡吗？", "qe": "If I earn much more than you, would you feel upset?" },
+      "back": { "q": "什么时候你想一个人静静？", "qe": "When do you want to stay alone?" }
+    },
+    {
+      "front": { "q": "你和父母对爱情的看法有什么区别？", "qe": "What differences are there between the views on love between you and your parents?" },
+      "back": { "q": "你最喜欢我们之间的哪些小细节？", "qe": "What small details do you like most about us?" }
+    },
+    {
+      "front": { "q": "你认为我是内心强大的人吗？", "qe": "Do you think I am a person with a strong inner self?" },
+      "back": { "q": "你经历过人生中的哪些高光？", "qe": "What have been the highlights of your life?" }
+    },
+    {
+      "front": { "q": "你小时候被父母揍过吗？因为什么？", "qe": "Were you beaten by your parents when you were a child? For what reason?" },
+      "back": { "q": "别人做的什么事让你很想骂人？", "qe": "What does someone do that makes you want to curse?" }
+    },
+    {
+      "front": { "q": "生活中谁对你的帮助最大？", "qe": "Who has been the biggest help to you in daily life?" },
+      "back": { "q": "哪一次争吵让你印象深刻？", "qe": "Which argument left a deep impression on you?" }
+    },
+    {
+      "front": { "q": "你认为最理想的约会场所什么样？", "qe": "What do you think is the most ideal place for a date?" },
+      "back": { "q": "如果突然获得了100万，你想做什么？", "qe": "If you suddenly got 1 million, what would you want to do?" }
+    },
+    {
+      "front": { "q": "你认为周末怎样过最理想？", "qe": "What do you think is the optimal way to spend your weekend?" },
+      "back": { "q": "送我一个超能力，你会选什么？", "qe": "If you could give me a superpower, what would it be?" }
+    },
+    {
+      "front": { "q": "最近有什么烦恼的事吗？我能怎么帮你？", "qe": "What are you worried about recently? How can I help you?" },
+      "back": { "q": "如果有情侣专属车厢，会是什么样？", "qe": "If there were a couples-only carriage, what might it look like?" }
+    },
+    {
+      "front": { "q": "假如我是丁克，你会怎么办？你的家人呢？", "qe": "If I were DINK, what would you do? What about your family?" },
+      "back": { "q": "我们要如何支持彼此的个人成长？", "qe": "How should we support each other's personal growth?" }
+    },
+    {
+      "front": { "q": "送你一座豪宅，你会如何使用？", "qe": "If you were gifted a mansion, how would you use it?" },
+      "back": { "q": "小学时你最好的朋友是谁？做过什么好玩的事？", "qe": "Who was your best friend in elementary school? What did you do for fun?" }
+    },
+    {
+      "front": { "q": "不考虑金钱，你最想做什么职业？", "qe": "If money were no object, what profession would you most want to pursue?" },
+      "back": { "q": "分手了还能不能做朋友？", "qe": "Can we still be friends after breaking up?" }
+    },
+    {
+      "front": { "q": "假如和人工智能谈恋爱，你会如何设计ta的面容？", "qe": "If you were dating an artificial intelligence, how would you design its face?" },
+      "back": { "q": "小时候你遇到过哪些惊心动魄的事？", "qe": "What thrilling experiences did you have as a child?" }
+    },
+    {
+      "front": { "q": "我们突然变成猫，要怎么在城市里生存？", "qe": "If we suddenly turned into cats, how would we survive in the city?" },
+      "back": { "q": "有没有一首歌让你感觉它是为你创作的？", "qe": "Is there a song that makes you feel like it's made for you?" }
+    },
+    {
+      "front": { "q": "我们越来越像了吗？", "qe": "Are we becoming more alike?" },
+      "back": { "q": "有什么食物味道是你无法接受的？", "qe": "Is there any taste of food you can't stand?" }
+    },
+    {
+      "front": { "q": "什么样的人会成为你的朋友？", "qe": "What kind of people will become your friend?" },
+      "back": { "q": "我们一起经历过什么疯狂的事？", "qe": "What crazy things have we experienced together?" }
+    },
+    {
+      "front": { "q": "如果突然被传送到荒郊野外，你会做什么？", "qe": "If you were suddenly teleported to the wilderness, what would you do?" },
+      "back": { "q": "你还记得哪些发生在幼儿园的事？", "qe": "What do you remember about kindergarten?" }
+    },
+    {
+      "front": { "q": "你最喜欢我们之间的哪张合照？", "qe": "Which photo between us is your favorite?" },
+      "back": { "q": "你最想收到的礼物是什么？", "qe": "What is the gift you most want to receive?" }
+    },
+    {
+      "front": { "q": "你最喜欢我们一起做的哪些事？", "qe": "What is your favorite thing we've done together?" },
+      "back": { "q": "你见过的优秀女性都有哪些特质？", "qe": "What are the excellent women you've met like?" }
+    },
+    {
+      "front": { "q": "用5个词描述我吧！", "qe": "Describe me in five words, please!" },
+      "back": { "q": "生气时最不希望我做什么？", "qe": "What's the last thing you want me to do when you are angry?" }
+    }
+  ]
+}

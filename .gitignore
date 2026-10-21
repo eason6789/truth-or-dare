@@ -1,0 +1,13 @@
+# 依赖
+node_modules/
+
+# 构建产物
+dist/
+.temp-entries/
+
+# 原型工具元数据
+.ojo/
+
+# 系统 / 日志
+.DS_Store
+*.log

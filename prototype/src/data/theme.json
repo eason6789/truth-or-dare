@@ -1,0 +1,198 @@
+{
+  "colors": {
+    "brand-primary": "hsl(0 87% 45%)",
+    "brand-accent": "hsl(0 87% 45%)",
+    "surface-front": "hsl(30 33% 94%)",
+    "surface-back": "hsl(0 87% 45%)",
+    "surface-doodle-light": "hsl(30 20% 88%)",
+    "surface-doodle-dark": "hsl(0 78% 40%)",
+    "text-primary": "hsl(0 0% 10%)",
+    "text-secondary": "hsl(0 0% 40%)",
+    "text-inverse": "hsl(0 0% 100%)",
+    "text-brand": "hsl(0 87% 45%)",
+    "border-subtle": "hsl(30 20% 88%)",
+    "border-card": "hsl(0 0% 0%)"
+  },
+  "fontSize": {
+    "caption": [
+      "13px",
+      {
+        "lineHeight": "1.4",
+        "letterSpacing": "0.01em"
+      }
+    ],
+    "body": [
+      "16px",
+      {
+        "lineHeight": "1.5",
+        "letterSpacing": "0"
+      }
+    ],
+    "body-lg": [
+      "20px",
+      {
+        "lineHeight": "1.4",
+        "letterSpacing": "0",
+        "fontWeight": "700"
+      }
+    ],
+    "h3": [
+      "25px",
+      {
+        "lineHeight": "1.3",
+        "letterSpacing": "-0.005em",
+        "fontWeight": "700"
+      }
+    ],
+    "h2": [
+      "31px",
+      {
+        "lineHeight": "1.25",
+        "letterSpacing": "-0.01em",
+        "fontWeight": "800"
+      }
+    ],
+    "h1": [
+      "39px",
+      {
+        "lineHeight": "1.15",
+        "letterSpacing": "-0.015em",
+        "fontWeight": "800"
+      }
+    ],
+    "display": [
+      "61px",
+      {
+        "lineHeight": "1.05",
+        "letterSpacing": "-0.02em",
+        "fontWeight": "800"
+      }
+    ]
+  },
+  "fontFamily": {
+    "display": [
+      "Manrope",
+      "ui-sans-serif",
+      "system-ui",
+      "sans-serif"
+    ],
+    "body": [
+      "Manrope",
+      "ui-sans-serif",
+      "system-ui",
+      "sans-serif"
+    ],
+    "zh": [
+      "jfOpenHuninn",
+      "PingFang SC",
+      "Hiragino Sans GB",
+      "Microsoft YaHei",
+      "sans-serif"
+    ],
+    "_zh_source": {
+      "provider": "emfont",
+      "fontId": "jfOpenHuninn",
+      "css_url": "https://font.emtech.cc/css/jfOpenHuninn",
+      "weight_url": "https://font.emtech.cc/css/jfOpenHuninn/400",
+      "license": "SIL Open Font License 1.1",
+      "weights_used": [
+        400
+      ],
+      "rationale": "jf open 粉圆（jfOpenHuninn）圆润活泼的字形完美契合'孩子气'品牌基调，增强桌游的亲和力和顽皮感。"
+    }
+  },
+  "spacing": {
+    "micro": "4px",
+    "tight": "8px",
+    "snug": "12px",
+    "base": "16px",
+    "comfortable": "24px",
+    "loose": "32px",
+    "section": "64px",
+    "section-y": "96px",
+    "macro": "128px",
+    "stack-sm": "24px",
+    "stack-md": "32px",
+    "stack-lg": "64px"
+  },
+  "borderRadius": {
+    "sm": "4px",
+    "md": "8px",
+    "lg": "12px",
+    "xl": "16px",
+    "2xl": "24px",
+    "full": "9999px"
+  },
+  "boxShadow": {
+    "card": "0 4px 20px -2px rgba(0, 0, 0, 0.15), 0 0 3px rgba(0,0,0,0.05)",
+    "card-hover": "0 8px 30px -4px rgba(0, 0, 0, 0.2), 0 0 4px rgba(0,0,0,0.05)"
+  },
+  "layoutMode": "UTILITY",
+  "_type_scale_ratio": {
+    "ratio": 1.25,
+    "ratio_name": "Major Third",
+    "body_px": 16,
+    "steps": {
+      "caption": -1,
+      "body": 0,
+      "body-lg": 1,
+      "h3": 2,
+      "h2": 3,
+      "h1": 4,
+      "display": 6
+    },
+    "rounded_px": {
+      "caption": 13,
+      "body": 16,
+      "body-lg": 20,
+      "h3": 25,
+      "h2": 31,
+      "h1": 39,
+      "display": 61
+    },
+    "notes": "Selected 1.250 Major Third for a balanced mobile card hierarchy, allowing the main question (h2) to stand out clearly while keeping dense substitution text (body) readable."
+  },
+  "_spacing_rhythm": {
+    "base_px": 8,
+    "allowed_multipliers": [
+      0.5,
+      1,
+      1.5,
+      2,
+      3,
+      4,
+      6,
+      8,
+      12,
+      16,
+      20,
+      24
+    ],
+    "tokens": {
+      "spacing-micro": 4,
+      "spacing-tight": 8,
+      "spacing-snug": 12,
+      "spacing-base": 16,
+      "spacing-comfortable": 24,
+      "spacing-loose": 32,
+      "spacing-section": 64,
+      "spacing-section-y": 96,
+      "spacing-macro": 128,
+      "spacing-stack-sm": 24,
+      "spacing-stack-md": 32,
+      "spacing-stack-lg": 64
+    }
+  },
+  "_pre_emit_scores": {
+    "P": 5,
+    "H": 5,
+    "E": 5,
+    "S": 5,
+    "R": 5,
+    "V": 5,
+    "R_prime": 5,
+    "mean": 5,
+    "attempts": 1,
+    "notes": "Perfect match for the physical card reference. High contrast crimson red and cream white, tightly coupled with rounded CJK fonts to convey the 'playful' brand."
+  }
+}

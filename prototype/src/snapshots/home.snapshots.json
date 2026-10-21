@@ -1,0 +1,45 @@
+{
+  "page": "home",
+  "snapshots": [
+    {
+      "id": "home-bucket-idle",
+      "name": "Bucket Screen — Idle State",
+      "purpose": "Baseline: user sees signing bucket with breathing animation, ready to draw. Tests bucket UI chrome, footer text, and initial interactivity.",
+      "priority": "p0",
+      "state": {
+        "screen": "bucket",
+        "drawPhase": "idle",
+        "stickIndex": 0,
+        "flipped": false,
+        "drawCount": 0
+      }
+    },
+    {
+      "id": "home-card-revealed",
+      "name": "Card Screen — Revealed State",
+      "purpose": "User has drawn and card is showing. Tests card render, flip affordance, return button, dark gradient background, and revealed phase interaction rules.",
+      "priority": "p0",
+      "state": {
+        "screen": "card",
+        "drawPhase": "revealed",
+        "stickIndex": 1,
+        "flipped": false,
+        "drawCount": 1
+      }
+    },
+    {
+      "id": "home-card-flipped",
+      "name": "Card Screen — Flipped Back Face",
+      "purpose": "User has flipped the card to see the back (red) face. Tests card rotation/animation state and alternate face content.",
+      "priority": "p1",
+      "state": {
+        "screen": "card",
+        "drawPhase": "revealed",
+        "stickIndex": 1,
+        "flipped": true,
+        "drawCount": 1
+      }
+    }
+  ],
+  "_zkStateBundleSha256": "644b6344f0ba6f54ae67bf0b8621d587149c37898ad987557f17090d9c3d71f7"
+}

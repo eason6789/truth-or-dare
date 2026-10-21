@@ -1,0 +1,12 @@
+packages:
+  - "components"
+  - "business"
+  - "prototype"
+  - "lib/api-client-react"
+
+# esbuild 的 postinstall 需要运行（二进制同时由 @esbuild/darwin-arm64 可选依赖提供，
+# 但 pnpm 11 默认拦截构建脚本，导致 run 前的依赖状态检查报 ERR_PNPM_IGNORED_BUILDS）。
+onlyBuiltDependencies:
+  - esbuild
+allowBuilds:
+  esbuild: set this to true or false

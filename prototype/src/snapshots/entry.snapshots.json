@@ -1,0 +1,33 @@
+{
+  "page": "entry",
+  "snapshots": [
+    {
+      "id": "entry-baseline",
+      "name": "Default Entry State",
+      "purpose": "Both edition cards in baseline state. Couple card interactive at baseline weight; friend card visibly disabled and lower opacity (0.72). Establishes the initial information hierarchy and affordance clarity.",
+      "priority": "p0",
+      "state": {
+        "focusedEdition": "none"
+      }
+    },
+    {
+      "id": "entry-couple-focused",
+      "name": "Couple Edition Focused",
+      "purpose": "Couple card receives visual emphasis (scale 1.02, translateY -2px) signaling readiness to navigate. Friend card remains grayed and disabled. Demonstrates focus/selection affordance.",
+      "priority": "p1",
+      "state": {
+        "focusedEdition": "couple"
+      }
+    },
+    {
+      "id": "entry-friend-focused",
+      "name": "Friend Edition Focused",
+      "purpose": "Friend card receives opacity boost (0.88) even though it remains disabled. Shows that visual focus is independent of interactivity. Couple card returns to baseline state.",
+      "priority": "p2",
+      "state": {
+        "focusedEdition": "friend"
+      }
+    }
+  ],
+  "_zkStateBundleSha256": "791700365923ee7536be1d63c666a2f1cc950bb57437978fead967b3df970f0b"
+}

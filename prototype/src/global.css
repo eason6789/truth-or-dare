@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --safe-area-inset-top: 0px;
+  --safe-area-inset-bottom: 0px;
+
+  /* Motion tokens (hand-authored: not injected by theme tokens) */
+  --ease-spring-out: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --ease-flip: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-fade: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-flip: 600ms;
+  --duration-draw: 520ms;
+  --duration-return: 420ms;
+  --duration-fade: 400ms;
+}
+
+/* 抽签:签条从底部抽出,飞入放大落位 */
+@keyframes card-draw {
+  0% {
+    transform: translateY(58vh) scale(0.24) rotate(-8deg);
+    opacity: 0;
+  }
+  55% {
+    opacity: 1;
+  }
+  78% {
+    transform: translateY(-1.5vh) scale(1.02) rotate(0.6deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* 收回:卡牌缩回签桶 */
+@keyframes card-return {
+  0% {
+    transform: translateY(0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  30% {
+    transform: translateY(-1.5vh) scale(0.96) rotate(-1.5deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(64vh) scale(0.22) rotate(7deg);
+    opacity: 0;
+  }
+}
+
+/* 签桶摇晃:抽到签时的得意抖动 */
+@keyframes bucket-shake {
+  0%, 100% { transform: rotate(0deg); }
+  20% { transform: rotate(-3.2deg) translateX(-2px); }
+  40% { transform: rotate(2.8deg) translateX(2px); }
+  60% { transform: rotate(-1.8deg) translateX(-1px); }
+  80% { transform: rotate(1.2deg) translateX(1px); }
+}
+
+/* 签条待机漂浮(极轻微,营造"等你抽"的邀请感) */
+@keyframes strip-breathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.anim-card-draw {
+  animation: card-draw var(--duration-draw) var(--ease-spring-out) both;
+}
+
+.anim-card-return {
+  animation: card-return var(--duration-return) cubic-bezier(0.5, 0, 0.75, 0) both;
+}
+
+.anim-bucket-shake {
+  animation: bucket-shake 480ms var(--ease-flip);
+}
+
+.anim-strip-breathe {
+  animation: strip-breathe 3.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-card-draw,
+  .anim-card-return,
+  .anim-bucket-shake,
+  .anim-strip-breathe {
+    animation: none;
+  }
+}
