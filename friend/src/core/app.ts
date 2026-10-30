@@ -81,6 +81,19 @@ export const App: AppInterface = {
       return;
     }
 
+    // Standalone deployment (no prototype host iframe): navigate directly
+    // instead of messaging an iframe parent. Keeps the multi-page build working
+    // when the dist is served as a plain static site.
+    if (window.parent === window) {
+      const query = runtimeParams
+        ? `?${new URLSearchParams(
+            Object.entries(runtimeParams).map(([k, v]) => [k, String(v)])
+          ).toString()}`
+        : '';
+      window.location.assign(`${targetPageId}.html${query}`);
+      return;
+    }
+
     window.parent.postMessage(
       {
         type: 'navigate',
