@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import { useEntryStore } from '../stores/entry.store';
 
 /**
@@ -47,10 +46,6 @@ export default function EntryPage() {
   const focusedEdition = useEntryStore((s) => s.focusedEdition);
   const setFocus = useEntryStore((s) => s.setFocus);
 
-  // 隐藏管理入口：1.5s 内连续点标题「孩子气」5 次 → 进入题库管理页
-  const titleTaps = useRef(0);
-  const titleTapTimer = useRef<number | undefined>(undefined);
-
   const goCouple = () => {
     setFocus('couple');
     window.App.transitionTo('couple');
@@ -59,19 +54,6 @@ export default function EntryPage() {
   const goFriend = () => {
     setFocus('friend');
     window.location.assign('/truth-or-dare/friend/table.html');
-  };
-
-  const onTitleTap = () => {
-    titleTaps.current += 1;
-    window.clearTimeout(titleTapTimer.current);
-    titleTapTimer.current = window.setTimeout(() => {
-      titleTaps.current = 0;
-    }, 1500);
-    if (titleTaps.current >= 5) {
-      titleTaps.current = 0;
-      window.clearTimeout(titleTapTimer.current);
-      window.location.assign('admin.html');
-    }
   };
 
   return (
@@ -83,7 +65,6 @@ export default function EntryPage() {
       >
         <HeartDoodle className="h-7 w-7 text-brand-primary" />
         <h1
-          onClick={onTitleTap}
           className="text-center font-zh text-h1 font-extrabold text-brand-primary"
           style={{
             lineHeight: 'var(--line-height-h1)',

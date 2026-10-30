@@ -15,6 +15,14 @@ var db *sql.DB
 //go:embed seed.json
 var seedJSON []byte
 
+//go:embed friend_seed.json
+var friendSeedJSON []byte
+
+// friendQuestion 朋友版卡牌：每张只有一道题（单面），存到 front_q。
+type friendQuestion struct {
+	Text string `json:"text"`
+}
+
 func initDB() error {
 	var err error
 	db, err = sql.Open("mysql", cfg.DB)
@@ -65,10 +73,29 @@ func ensureSchema() error {
 	return nil
 }
 
-// seedSticks 首次启动时把 seed.json 里的题库灌入数据库，保证游戏不为空。
+// seedSticks 首次启动时按版本分别灌入题库，保证两个版本都不为空。
+// 各版本独立判断是否已有数据，互不影响。
 func seedSticks() error {
+	if err := seedCoupleSticks(); err != nil {
+		logger.Printf("情侣版种子数据写入失败（可忽略）: %v", err)
+	}
+	if err := seedFriendSticks(); err != nil {
+		logger.Printf("朋友版种子数据写入失败（可忽略）: %v", err)
+	}
+	return nil
+}
+
+func editionCount(edition string) (int, error) {
 	var n int
-	_ = db.QueryRow(`SELECT COUNT(*) FROM sticks`).Scan(&n)
+	err := db.QueryRow(`SELECT COUNT(*) FROM sticks WHERE edition = ?`, edition).Scan(&n)
+	return n, err
+}
+
+func seedCoupleSticks() error {
+	n, err := editionCount("couple")
+	if err != nil {
+		return err
+	}
 	if n > 0 {
 		return nil
 	}
@@ -78,20 +105,43 @@ func seedSticks() error {
 		return err
 	}
 	for i, s := range seed {
-		edition := s.Edition
-		if edition == "" {
-			edition = "couple"
-		}
 		_, err := db.Exec(`INSERT INTO sticks
 			(edition, sort_order, front_q, front_qe, front_s, front_se, back_q, back_qe, back_s, back_se)
 			VALUES (?,?,?,?,?,?,?,?,?,?)`,
-			edition, i,
+			"couple", i,
 			s.Front.Q, s.Front.QE, s.Front.S, s.Front.SE,
 			s.Back.Q, s.Back.QE, s.Back.S, s.Back.SE)
 		if err != nil {
 			return err
 		}
 	}
-	logger.Printf("种子数据写入完成，共 %d 张签", len(seed))
+	logger.Printf("情侣版种子数据写入完成，共 %d 张签", len(seed))
+	return nil
+}
+
+func seedFriendSticks() error {
+	n, err := editionCount("friend")
+	if err != nil {
+		return err
+	}
+	if n > 0 {
+		return nil
+	}
+
+	var seed []friendQuestion
+	if err := json.Unmarshal(friendSeedJSON, &seed); err != nil {
+		return err
+	}
+	for i, q := range seed {
+		// 朋友版每张卡只有一道题，存到 front_q；背面留空。
+		_, err := db.Exec(`INSERT INTO sticks
+			(edition, sort_order, front_q, front_qe, front_s, front_se, back_q, back_qe, back_s, back_se)
+			VALUES (?,?,?,?,?,?,?,?,?,?)`,
+			"friend", i, q.Text, "", "", "", "", "", "", "")
+		if err != nil {
+			return err
+		}
+	}
+	logger.Printf("朋友版种子数据写入完成，共 %d 张卡", len(seed))
 	return nil
 }

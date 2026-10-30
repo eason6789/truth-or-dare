@@ -2,6 +2,7 @@ import { create } from '../core/zustand-wrapper';
 import {
   getInitialHistory,
   getQuestions,
+  loadQuestions as loadQuestionsFromDb,
 } from '../utils/questions';
 
 export type TablePhase = 'idle' | 'drawing' | 'skipping' | 'complete';
@@ -31,6 +32,8 @@ interface TableState {
   closeSettings: () => void;
   toggleSound: () => void;
   requestReset: () => void;
+  /** 从后端拉取题库并重建牌堆（运行时替换内置题目）。 */
+  loadQuestions: () => Promise<void>;
 }
 
 const shuffle = (ids: number[]): number[] => {
@@ -137,6 +140,22 @@ export const useTableStore = create<TableState>((set, get) => ({
       resetArmed: false,
       settingsOpen: false,
       dragResetKey: state.dragResetKey + 1,
+    });
+  },
+
+  loadQuestions: async () => {
+    const questions = await loadQuestionsFromDb();
+    const allIds = questions.map((q) => q.id);
+    set((state) => {
+      const drawn = state.drawnIds.filter((id) => allIds.includes(id));
+      const drawnSet = new Set(drawn);
+      const deck = shuffle(allIds.filter((id) => !drawnSet.has(id)));
+      return {
+        ...state,
+        deck,
+        drawnIds: drawn,
+        phase: deck.length === 0 ? 'complete' : 'idle',
+      };
     });
   },
 }));

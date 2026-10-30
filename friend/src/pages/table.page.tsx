@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   AnimatePresence,
   motion,
@@ -20,8 +20,6 @@ import {
   playWhoosh,
   setSoundMuted,
 } from '../utils/sound';
-
-const TOTAL = 52;
 
 /** Spring for the drawn card settling onto the table — damped, heavy paper. */
 const SETTLE_SPRING = { type: 'spring', stiffness: 300, damping: 25 } as const;
@@ -90,10 +88,32 @@ export default function TablePage() {
   const closeSettings = useTableStore((s) => s.closeSettings);
   const toggleSound = useTableStore((s) => s.toggleSound);
   const requestReset = useTableStore((s) => s.requestReset);
+  const loadQuestions = useTableStore((s) => s.loadQuestions);
 
   useEffect(() => {
     setSoundMuted(!soundOn);
   }, [soundOn]);
+
+  // 运行时从后端拉取题库（替换内置 store.json 题目）
+  useEffect(() => {
+    loadQuestions();
+  }, [loadQuestions]);
+
+  // 隐藏管理入口：1.5s 内连续点标题「莓辣 · 照见卡牌」5 次 → 进入题库管理页
+  const adminTaps = useRef(0);
+  const adminTapTimer = useRef<number | undefined>(undefined);
+  const onAdminTap = () => {
+    adminTaps.current += 1;
+    window.clearTimeout(adminTapTimer.current);
+    adminTapTimer.current = window.setTimeout(() => {
+      adminTaps.current = 0;
+    }, 1500);
+    if (adminTaps.current >= 5) {
+      adminTaps.current = 0;
+      window.clearTimeout(adminTapTimer.current);
+      window.location.assign('/truth-or-dare/admin.html?edition=friend');
+    }
+  };
 
   // Gesture motion values for the top draggable card.
   const dragY = useMotionValue(0);
@@ -109,6 +129,7 @@ export default function TablePage() {
   const underId = activeId !== null ? deck[0] ?? null : deck[1] ?? null;
   const thirdId = activeId !== null ? deck[1] ?? null : deck[2] ?? null;
   const idle = phase === 'idle';
+  const total = getQuestions().length || 52;
   const hasCards = getQuestions().length > 0;
 
   const commitDraw = () => {
@@ -137,7 +158,10 @@ export default function TablePage() {
       >
         {/* top slim brand bar */}
         <header className="flex shrink-0 items-center justify-between px-comfortable pt-base">
-          <p className="font-zh text-caption tracking-[0.35em] text-text-muted">
+          <p
+            onClick={onAdminTap}
+            className="font-zh text-caption tracking-[0.35em] text-text-muted"
+          >
             莓辣 · 照见卡牌
           </p>
           <button
@@ -271,7 +295,7 @@ export default function TablePage() {
               >
                 <PaperCard className="flex h-full flex-col items-center justify-center px-loose text-center">
                   <p className="font-display text-h3 font-semibold text-brand-primary">
-                    № 52
+                    № {total}
                   </p>
                   <span aria-hidden className="mt-comfortable h-px w-10 bg-border-strong" />
                   <h2 className="mt-comfortable font-zh text-h3 font-semibold leading-snug text-text-primary">
@@ -319,7 +343,7 @@ export default function TablePage() {
               往期牌堆
             </span>
             <span className="w-full">
-              <ProgressLine drawn={drawn} total={TOTAL} />
+              <ProgressLine drawn={drawn} total={total} />
             </span>
           </button>
         </footer>

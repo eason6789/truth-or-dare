@@ -51,6 +51,22 @@ export default function CouplePage() {
   const sticks = useCoupleStore((s) => s.sticks);
   const loadSticks = useCoupleStore((s) => s.loadSticks);
 
+  // 隐藏管理入口：1.5s 内连续点标题「孩子气 · 真心话」5 次 → 进入题库管理页
+  const adminTaps = useRef(0);
+  const adminTapTimer = useRef<number | undefined>(undefined);
+  const onAdminTitleTap = () => {
+    adminTaps.current += 1;
+    window.clearTimeout(adminTapTimer.current);
+    adminTapTimer.current = window.setTimeout(() => {
+      adminTaps.current = 0;
+    }, 1500);
+    if (adminTaps.current >= 5) {
+      adminTaps.current = 0;
+      window.clearTimeout(adminTapTimer.current);
+      window.location.assign('/truth-or-dare/admin.html?edition=couple');
+    }
+  };
+
   const timers = useRef<number[]>([]);
   useEffect(() => {
     loadSticks();
@@ -93,6 +109,7 @@ export default function CouplePage() {
           style={{ paddingTop: 'max(var(--spacing-stack-md), env(safe-area-inset-top, 0px))' }}
         >
           <h1
+            onClick={onAdminTitleTap}
             className="text-center font-zh text-h3 font-extrabold text-brand-primary"
             style={{
               lineHeight: 'var(--line-height-h3)',

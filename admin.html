@@ -117,10 +117,10 @@
     <div class="container">
         <header>
             <div>
-                <h1>真心话 · 题库管理</h1>
-                <div class="sub">在这里增删改「孩子气·真心话」的签面题目，保存后游戏端刷新即生效</div>
+                <h1 id="pageTitle">真心话 · 题库管理</h1>
+                <div class="sub" id="pageSub">在这里增删改「孩子气·真心话」的签面题目，保存后游戏端刷新即生效</div>
             </div>
-            <button class="btn" onclick="openCreate()">＋ 新增一张签</button>
+            <button class="btn" id="newBtn" onclick="openCreate()">＋ 新增一张签</button>
         </header>
 
         <div class="toolbar">
@@ -136,27 +136,27 @@
             <h2 id="modalTitle">新增一张签</h2>
             <form id="stickForm" onsubmit="saveStick(event)">
                 <input type="hidden" id="f_id">
-                <div class="face-block">
-                    <h3><span class="tag front">正面</span>白面题</h3>
+                <div class="face-block" id="frontBlock">
+                    <h3><span class="tag front" id="frontTag">正面</span>白面题</h3>
                     <div class="field">
                         <label>题目（必填）</label>
                         <textarea id="f_front_q" rows="2" required placeholder="例如：你最喜欢的旅行地是哪里？"></textarea>
                     </div>
-                    <div class="field">
+                    <div class="field" id="frontQeField">
                         <label>英文副题</label>
                         <input id="f_front_qe" placeholder="Where do you most want to travel?">
                     </div>
-                    <div class="field">
+                    <div class="field" id="frontSField">
                         <label>替换词（用 、 分隔，可选）</label>
                         <input id="f_front_s" placeholder="巴黎、东京、冰岛">
                         <div class="hint">留空则不显示替换词区块</div>
                     </div>
-                    <div class="field">
+                    <div class="field" id="frontSeField">
                         <label>替换词英文</label>
                         <input id="f_front_se" placeholder="Paris, Tokyo, Iceland">
                     </div>
                 </div>
-                <div class="face-block">
+                <div class="face-block" id="backBlock">
                     <h3><span class="tag back">反面</span>红面题</h3>
                     <div class="field">
                         <label>题目（必填）</label>
@@ -197,6 +197,9 @@
 
     <script>
         const API = '/truth-or-dare/api/sticks';
+        // 版本参数：couple（情侣版，正反两面）/ friend（朋友版，单面题目）
+        const edition = new URLSearchParams(location.search).get('edition') || 'couple';
+        const isFriend = edition === 'friend';
         let sticks = [];
 
         function $(id) { return document.getElementById(id); }
@@ -211,11 +214,11 @@
 
         async function loadSticks() {
             try {
-                const res = await fetch(API + '?edition=couple');
+                const res = await fetch(API + '?edition=' + edition);
                 const json = await res.json();
                 sticks = json.data || [];
                 render();
-                $('count').textContent = '共 ' + sticks.length + ' 张签';
+                $('count').textContent = '共 ' + sticks.length + (isFriend ? ' 张卡' : ' 张签');
             } catch (e) {
                 toast('加载失败：' + e.message);
             }
@@ -225,6 +228,21 @@
             const list = $('list');
             if (sticks.length === 0) {
                 list.innerHTML = '<div style="color:var(--text-secondary);padding:20px">暂无题目，点右上角新增。</div>';
+                return;
+            }
+            if (isFriend) {
+                list.innerHTML = sticks.map((s, i) =>
+                    '<div class="card">' +
+                        '<div class="idx">#' + (i + 1) + '</div>' +
+                        '<div class="body">' +
+                            '<div class="face"><span class="tag front">题目</span><div><div class="q">' + esc(s.front.q) + '</div></div></div>' +
+                        '</div>' +
+                        '<div class="actions">' +
+                            '<button class="btn ghost" onclick="openEdit(' + s.id + ')">编辑</button>' +
+                            '<button class="btn danger" onclick="deleteStick(' + s.id + ')">删除</button>' +
+                        '</div>' +
+                    '</div>'
+                ).join('');
                 return;
             }
             list.innerHTML = sticks.map((s, i) => {
@@ -253,7 +271,7 @@
         }
 
         function openCreate() {
-            $('modalTitle').textContent = '新增一张签';
+            $('modalTitle').textContent = isFriend ? '新增一张卡' : '新增一张签';
             $('stickForm').reset();
             $('f_id').value = '';
             $('modalBackdrop').classList.add('open');
@@ -283,20 +301,22 @@
             e.preventDefault();
             const id = $('f_id').value;
             const payload = {
-                edition: 'couple',
+                edition: edition,
                 sort_order: 0,
                 front: {
                     q: $('f_front_q').value.trim(),
-                    qe: $('f_front_qe').value.trim(),
-                    s: $('f_front_s').value.trim(),
-                    se: $('f_front_se').value.trim()
+                    qe: isFriend ? '' : $('f_front_qe').value.trim(),
+                    s: isFriend ? '' : $('f_front_s').value.trim(),
+                    se: isFriend ? '' : $('f_front_se').value.trim()
                 },
-                back: {
-                    q: $('f_back_q').value.trim(),
-                    qe: $('f_back_qe').value.trim(),
-                    s: $('f_back_s').value.trim(),
-                    se: $('f_back_se').value.trim()
-                }
+                back: isFriend
+                    ? { q: '', qe: '', s: '', se: '' }
+                    : {
+                        q: $('f_back_q').value.trim(),
+                        qe: $('f_back_qe').value.trim(),
+                        s: $('f_back_s').value.trim(),
+                        se: $('f_back_se').value.trim()
+                    }
             };
             try {
                 const res = await fetch(id ? API + '/' + id : API, {
@@ -348,6 +368,21 @@
         $('pwInput').addEventListener('keydown', function (e) {
             if (e.key === 'Enter') checkPassword();
         });
+
+        // 朋友版为单面题：隐藏反面与英文/替换词字段，重命名标签
+        if (isFriend) {
+            $('pageTitle').textContent = '朋友版 · 题库管理';
+            $('pageSub').textContent = '在这里增删改「莓辣·照见卡牌」的题目，保存后游戏端刷新即生效';
+            $('newBtn').textContent = '＋ 新增一张卡';
+            $('frontTag').textContent = '题目';
+            $('frontQeField').style.display = 'none';
+            $('frontSField').style.display = 'none';
+            $('frontSeField').style.display = 'none';
+            $('backBlock').style.display = 'none';
+            // 反面题在朋友版隐藏但仍带 required，去掉以免阻止表单提交
+            $('f_back_q').removeAttribute('required');
+        }
+
         $('pwInput').focus();
     </script>
 </body>
