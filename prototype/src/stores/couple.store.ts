@@ -51,18 +51,18 @@ const resolveSticks = (): Stick[] => {
 
 const STICK_POOL = resolveSticks();
 
-const pickIndex = (recent: number[]): number => {
-  if (STICK_POOL.length <= 1) return 0;
-  let idx = Math.floor(Math.random() * STICK_POOL.length);
+const pickIndex = (pool: Stick[], recent: number[]): number => {
+  if (pool.length <= 1) return 0;
+  let idx = Math.floor(Math.random() * pool.length);
   let guard = 0;
   while (recent.includes(idx) && guard < 24) {
-    idx = Math.floor(Math.random() * STICK_POOL.length);
+    idx = Math.floor(Math.random() * pool.length);
     guard += 1;
   }
   return idx;
 };
 
-interface HomeState {
+interface CoupleState {
   sticks: Stick[];
   screen: Screen;
   drawPhase: DrawPhase;
@@ -71,6 +71,8 @@ interface HomeState {
   recent: number[];
   /** 已抽次数,用于界面小计 */
   drawCount: number;
+  /** 从后端接口拉取题库(运行时),失败时保留内置题目 */
+  loadSticks: () => Promise<void>;
   shakeBucket: () => void;
   draw: () => void;
   reveal: () => void;
@@ -79,7 +81,7 @@ interface HomeState {
   finishReturn: () => void;
 }
 
-export const useHomeStore = create<HomeState>((set, get) => ({
+export const useCoupleStore = create<CoupleState>((set, get) => ({
   sticks: STICK_POOL,
   screen: 'bucket',
   drawPhase: 'idle',
@@ -87,6 +89,19 @@ export const useHomeStore = create<HomeState>((set, get) => ({
   flipped: false,
   recent: [],
   drawCount: 0,
+
+  loadSticks: async () => {
+    try {
+      const res = await fetch('/truth-or-dare/api/sticks?edition=couple');
+      const json = (await res.json()) as { success?: boolean; data?: Stick[] };
+      if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+        // 换上新题库后复位抽签状态,避免 recent 里的旧索引越界
+        set({ sticks: json.data, recent: [], stickIndex: 0, drawCount: 0 });
+      }
+    } catch {
+      // 接口不可用时保留内置题目,游戏仍可玩
+    }
+  },
 
   shakeBucket: () => {
     const { drawPhase, screen } = get();
@@ -99,9 +114,9 @@ export const useHomeStore = create<HomeState>((set, get) => ({
   },
 
   draw: () => {
-    const { drawPhase, screen, recent, drawCount } = get();
+    const { drawPhase, screen, recent, drawCount, sticks } = get();
     if (screen !== 'bucket' || drawPhase === 'revealing' || drawPhase === 'revealed') return;
-    const idx = pickIndex(recent);
+    const idx = pickIndex(sticks, recent);
     // 抽新签时先复位翻面状态,保证新签始终从正面(白面)展示
     set({
       drawPhase: 'revealing',

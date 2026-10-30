@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 
 /**
- * 真心话大冒险卡牌(3D 翻面)。
+ * 真心话卡牌(3D 翻面)。
  * 纯展示组件:正面米白 / 背面朱红,正反两面是同一张签上的两道不同题目,
  * 手绘涂鸦散布下半部。翻面由外层 wrapper(perspective)+ 内层 flipper(preserve-3d + rotateY)实现。
  */
@@ -279,7 +279,7 @@ function CardFace({
             className="font-zh text-caption"
             style={{ color: `${hsl(brand)}`, opacity: 0.7, fontSize: '12px' }}
           >
-            真心话 · 大冒险
+            真心话
           </span>
           <span
             className="font-body text-caption"
@@ -314,7 +314,7 @@ export function FlipCard({ card, flipped, onFlip, className, style }: FlipCardPr
           WebkitTapHighlightColor: 'transparent',
         }}
       >
-        <CardFace face={card.front} inverse={false} />
+        <CardFace face={card.front} inverse={false} style={{ transform: 'rotateY(0deg)' }} />
         <CardFace face={card.back} inverse style={{ transform: 'rotateY(180deg)' }} />
       </button>
     </div>

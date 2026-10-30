@@ -185,7 +185,7 @@ initPage(PageComponent);
 );
 
 const htmlPlugins = pageFiles.map((page) => {
-  const pageTitle = `${page.name.charAt(0).toUpperCase() + page.name.slice(1)} - App`;
+  const pageTitle = '孩子气·真心话';
   return new rspack.HtmlRspackPlugin({
     template: './src/template.html',
     filename: `${page.name}.html`,

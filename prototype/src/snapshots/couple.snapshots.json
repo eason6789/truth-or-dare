@@ -1,8 +1,8 @@
 {
-  "page": "home",
+  "page": "couple",
   "snapshots": [
     {
-      "id": "home-baseline",
+      "id": "couple-baseline",
       "name": "Bucket Screen — Initial State",
       "purpose": "Default landing state: bucket interface, idle, no draws yet. Baseline for review of bucket screen layout, header, bucket button, footer messaging.",
       "priority": "p0",
@@ -16,7 +16,7 @@
       }
     },
     {
-      "id": "home-card-revealed",
+      "id": "couple-card-revealed",
       "name": "Card Screen — After Draw",
       "purpose": "Review card display after successful draw: switched to card screen, drawPhase=revealed, card flipped=false (front), drawCount incremented, recent includes drawn stick. Shows primary card interface and interaction state.",
       "priority": "p0",
@@ -32,7 +32,7 @@
       }
     },
     {
-      "id": "home-card-back-flipped",
+      "id": "couple-card-back-flipped",
       "name": "Card Screen — Back Side Visible",
       "purpose": "Card flipped to back (red question side). Tests flip state toggle and footer hint text change to 'not want this one' variant. Validates flip interaction branch.",
       "priority": "p1",
@@ -48,7 +48,7 @@
       }
     },
     {
-      "id": "home-card-returning",
+      "id": "couple-card-returning",
       "name": "Card Screen — Return Animation",
       "purpose": "drawPhase=returning state during card flyback animation. Tests animation class and button disabled state during return. Validates return phase visual state.",
       "priority": "p1",
@@ -64,7 +64,7 @@
       }
     },
     {
-      "id": "home-bucket-multi-draw",
+      "id": "couple-bucket-multi-draw",
       "name": "Bucket Screen — After Multiple Draws",
       "purpose": "Back at bucket screen after returning: drawCount=2, recent tracking multiple indices, footer metrics updated. Tests state recovery and metrics display after round-trip.",
       "priority": "p1",

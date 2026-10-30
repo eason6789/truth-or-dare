@@ -5,7 +5,7 @@ import { create } from 'zustand';
  *  - none:   默认(两张卡片常规展示)
  *  - couple: 情侣版获得视觉强调(可点击,进入签桶)
  *  - friend: 朋友版强调展示(disabled,敬请期待)
- * 该字段仅驱动视觉分支,供快照审查;点击「情侣版」直接跳转 home 页。
+ * 该字段仅驱动视觉分支,供快照审查;点击「情侣版」直接跳转 couple 页。
  */
 
 export type EditionFocus = 'none' | 'couple' | 'friend';

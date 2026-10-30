@@ -1,10 +1,11 @@
+import { useRef } from 'react';
 import { useEntryStore } from '../stores/entry.store';
 
 /**
  * 入口页(第一屏,在签桶界面之前)
- * 米白底 + 品牌区「孩子气 / 真心话大冒险」+ 两个版本入口卡片:
- *  - 情侣版:红底白字主卡(视觉主角),可点击 → 进入情侣版签桶界面(home 页抽签流程)
- *  - 朋友版:浅米白底灰字 + 「敬请期待」标签,禁用态(无投影、低饱和)
+ * 米白底 + 品牌区「孩子气 / 真心话」+ 两个版本入口卡片:
+ *  - 情侣版:红底白字主卡(视觉主角),可点击 → 进入情侣版签桶界面(couple 页抽签流程)
+ *  - 朋友版:浅米白底卡片,可点击 → 进入朋友版抽卡台(table 页)
  */
 
 function HeartDoodle({ className }: { className?: string }) {
@@ -46,9 +47,31 @@ export default function EntryPage() {
   const focusedEdition = useEntryStore((s) => s.focusedEdition);
   const setFocus = useEntryStore((s) => s.setFocus);
 
+  // 隐藏管理入口：1.5s 内连续点标题「孩子气」5 次 → 进入题库管理页
+  const titleTaps = useRef(0);
+  const titleTapTimer = useRef<number | undefined>(undefined);
+
   const goCouple = () => {
     setFocus('couple');
-    window.App.transitionTo('home');
+    window.App.transitionTo('couple');
+  };
+
+  const goFriend = () => {
+    setFocus('friend');
+    window.location.assign('/truth-or-dare/friend/table.html');
+  };
+
+  const onTitleTap = () => {
+    titleTaps.current += 1;
+    window.clearTimeout(titleTapTimer.current);
+    titleTapTimer.current = window.setTimeout(() => {
+      titleTaps.current = 0;
+    }, 1500);
+    if (titleTaps.current >= 5) {
+      titleTaps.current = 0;
+      window.clearTimeout(titleTapTimer.current);
+      window.location.assign('admin.html');
+    }
   };
 
   return (
@@ -60,6 +83,7 @@ export default function EntryPage() {
       >
         <HeartDoodle className="h-7 w-7 text-brand-primary" />
         <h1
+          onClick={onTitleTap}
           className="text-center font-zh text-h1 font-extrabold text-brand-primary"
           style={{
             lineHeight: 'var(--line-height-h1)',
@@ -72,7 +96,7 @@ export default function EntryPage() {
           className="text-center font-zh text-body font-bold text-text-secondary"
           style={{ letterSpacing: '0.28em' }}
         >
-          真心话大冒险
+          真心话
         </p>
       </header>
 
@@ -124,14 +148,17 @@ export default function EntryPage() {
           </span>
         </button>
 
-        {/* 朋友版(disabled 敬请期待:无投影、低饱和) */}
-        <div
-          aria-disabled="true"
-          className="relative flex w-[82%] max-w-[320px] cursor-not-allowed select-none flex-col items-start gap-tight overflow-hidden rounded-2xl border border-border-subtle bg-surface-doodle-light text-left"
+        {/* 朋友版(可点击 → 进入朋友版抽卡台) */}
+        <button
+          type="button"
+          onClick={goFriend}
+          aria-label="进入朋友版抽卡台"
+          className="relative flex w-[82%] max-w-[320px] cursor-pointer flex-col items-start gap-tight overflow-hidden rounded-2xl border border-border-subtle bg-surface-doodle-light text-left transition-all duration-200 ease-out hover:-translate-y-[2px] focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 active:translate-y-0 active:scale-[0.98]"
           style={{
             padding: 'var(--spacing-comfortable)',
-            opacity: focusedEdition === 'friend' ? 0.85 : 0.68,
-            filter: 'saturate(0.35)',
+            boxShadow: 'var(--shadow-card)',
+            transform: focusedEdition === 'friend' ? 'translateY(-2px) scale(1.02)' : undefined,
+            WebkitTapHighlightColor: 'transparent',
           }}
         >
           <span
@@ -140,25 +167,28 @@ export default function EntryPage() {
           >
             FRIENDS
           </span>
-          <span
-            className="font-zh text-h2 font-extrabold text-text-secondary"
-            style={{
-              lineHeight: 'var(--line-height-h2)',
-              letterSpacing: 'var(--letter-spacing-h2)',
-            }}
-          >
-            朋友版
+          <span className="flex w-full items-center justify-between gap-tight">
+            <span
+              className="font-zh text-h2 font-extrabold text-text-primary"
+              style={{
+                lineHeight: 'var(--line-height-h2)',
+                letterSpacing: 'var(--letter-spacing-h2)',
+              }}
+            >
+              朋友版
+            </span>
+            <ArrowDoodle className="h-6 w-6 shrink-0 text-text-secondary" />
           </span>
           <span className="font-zh text-caption text-text-secondary">
             和朋友们的心动问答
           </span>
           <span
-            className="mt-tight inline-flex items-center rounded-full border border-border-subtle bg-surface-front font-zh text-caption font-bold text-text-secondary"
+            className="mt-tight inline-flex items-center rounded-full bg-brand-primary font-zh text-caption font-bold text-text-inverse"
             style={{ padding: 'var(--spacing-micro) var(--spacing-snug)' }}
           >
-            敬请期待
+            开始抽卡
           </span>
-        </div>
+        </button>
       </main>
 
       {/* 底部小字 */}

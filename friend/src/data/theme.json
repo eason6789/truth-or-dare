@@ -1,0 +1,203 @@
+{
+  "colors": {
+    "brand-primary": "hsl(344 60% 38%)",
+    "brand-accent": "hsl(344 60% 38%)",
+    "surface-base": "hsl(45 10% 90%)",
+    "surface-raised": "hsl(40 20% 97%)",
+    "surface-glass-dark": "hsl(30 5% 20%)",
+    "text-primary": "hsl(30 5% 20%)",
+    "text-primary-dark": "hsl(45 10% 90%)",
+    "text-muted": "hsl(30 5% 42%)",
+    "border-subtle": "hsl(33 15% 85%)",
+    "border-strong": "hsl(30 10% 75%)",
+    "status-success": "hsl(145 40% 40%)",
+    "status-warning": "hsl(35 80% 50%)",
+    "status-error": "hsl(0 70% 45%)",
+    "status-focus-ring": "hsl(344 60% 38%)"
+  },
+  "fontSize": {
+    "caption": [
+      "13px",
+      {
+        "lineHeight": "1.5",
+        "letterSpacing": "0.01em"
+      }
+    ],
+    "body": [
+      "16px",
+      {
+        "lineHeight": "1.6",
+        "letterSpacing": "0"
+      }
+    ],
+    "body-lg": [
+      "20px",
+      {
+        "lineHeight": "1.5",
+        "letterSpacing": "0"
+      }
+    ],
+    "h3": [
+      "25px",
+      {
+        "lineHeight": "1.4",
+        "letterSpacing": "-0.005em",
+        "fontWeight": "600"
+      }
+    ],
+    "h2": [
+      "31px",
+      {
+        "lineHeight": "1.3",
+        "letterSpacing": "-0.01em",
+        "fontWeight": "600"
+      }
+    ],
+    "h1": [
+      "39px",
+      {
+        "lineHeight": "1.2",
+        "letterSpacing": "-0.015em",
+        "fontWeight": "700"
+      }
+    ],
+    "display": [
+      "61px",
+      {
+        "lineHeight": "1.1",
+        "letterSpacing": "-0.02em",
+        "fontWeight": "700"
+      }
+    ]
+  },
+  "fontFamily": {
+    "display": [
+      "Lora",
+      "ui-serif",
+      "Georgia",
+      "serif"
+    ],
+    "body": [
+      "Manrope",
+      "ui-sans-serif",
+      "system-ui",
+      "-apple-system",
+      "sans-serif"
+    ],
+    "zh": [
+      "LXGWWenKaiGB",
+      "PingFang SC",
+      "Hiragino Sans GB",
+      "Microsoft YaHei",
+      "sans-serif"
+    ],
+    "_zh_source": {
+      "provider": "emfont",
+      "fontId": "LXGWWenKaiGB",
+      "css_url": "https://font.emtech.cc/css/LXGWWenKaiGB",
+      "weight_url": "https://font.emtech.cc/css/LXGWWenKaiGB/400",
+      "license": "OFL-1.1",
+      "weights_used": [
+        400,
+        700
+      ],
+      "rationale": "霞鹜文楷GB (LXGW WenKai) 提供了真实纸牌的温润与安静，极简文学感，完美契合走心提问的仪式感。"
+    }
+  },
+  "spacing": {
+    "micro": "4px",
+    "tight": "8px",
+    "snug": "12px",
+    "base": "16px",
+    "comfortable": "24px",
+    "loose": "32px",
+    "section": "64px",
+    "section-y": "96px",
+    "macro": "128px",
+    "stack-sm": "24px",
+    "stack-md": "32px",
+    "stack-lg": "64px"
+  },
+  "borderRadius": {
+    "none": "0",
+    "sm": "4px",
+    "md": "8px",
+    "lg": "12px",
+    "xl": "16px",
+    "2xl": "24px",
+    "3xl": "32px",
+    "full": "9999px"
+  },
+  "boxShadow": {
+    "sm": "0 1px 2px 0 rgba(44, 42, 41, 0.05)",
+    "md": "0 4px 6px -1px rgba(44, 42, 41, 0.05), 0 2px 4px -2px rgba(44, 42, 41, 0.05)",
+    "lg": "0 10px 15px -3px rgba(44, 42, 41, 0.05), 0 4px 6px -4px rgba(44, 42, 41, 0.05)",
+    "xl": "0 20px 25px -5px rgba(44, 42, 41, 0.08), 0 8px 10px -6px rgba(44, 42, 41, 0.04)"
+  },
+  "_type_scale_ratio": {
+    "ratio": 1.25,
+    "ratio_name": "Major Third",
+    "body_px": 16,
+    "steps": {
+      "caption": -1,
+      "body": 0,
+      "body-lg": 1,
+      "h3": 2,
+      "h2": 3,
+      "h1": 4,
+      "display": 6
+    },
+    "rounded_px": {
+      "caption": 13,
+      "body": 16,
+      "body-lg": 20,
+      "h3": 25,
+      "h2": 31,
+      "h1": 39,
+      "display": 61
+    },
+    "notes": "1.250 是移动端的完美平衡，确保核心题目（h1/h2）能拥有存在感，同时不会打破窄屏的居中留白布局。"
+  },
+  "_spacing_rhythm": {
+    "base_px": 8,
+    "allowed_multipliers": [
+      0.5,
+      1,
+      1.5,
+      2,
+      3,
+      4,
+      6,
+      8,
+      12,
+      16
+    ],
+    "tokens": {
+      "spacing-micro": 4,
+      "spacing-tight": 8,
+      "spacing-snug": 12,
+      "spacing-base": 16,
+      "spacing-comfortable": 24,
+      "spacing-loose": 32,
+      "spacing-section": 64,
+      "spacing-section-y": 96,
+      "spacing-macro": 128,
+      "spacing-stack-sm": 24,
+      "spacing-stack-md": 32,
+      "spacing-stack-lg": 64
+    }
+  },
+  "layoutMode": "EDITORIAL",
+  "_pre_emit_scores": {
+    "P": 5,
+    "H": 5,
+    "E": 5,
+    "S": 5,
+    "R": 5,
+    "V": 5,
+    "R_prime": 5,
+    "mean": 5,
+    "attempts": 1,
+    "notes": ""
+  }
+}

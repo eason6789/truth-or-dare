@@ -1,0 +1,62 @@
+{
+  "page": "history",
+  "snapshots": [
+    {
+      "id": "history-empty",
+      "name": "Empty Pile",
+      "purpose": "No drawn cards yet. Verify empty state message, number display (№ 00), and return button.",
+      "priority": "p0",
+      "state": {
+        "entries": [],
+        "expandedId": null
+      }
+    },
+    {
+      "id": "history-baseline",
+      "name": "Multiple Entries, None Expanded",
+      "purpose": "Verify list rendering, card numbering, progress line, collapsed chevron state. Baseline with several entries.",
+      "priority": "p0",
+      "state": {
+        "entries": [
+          {
+            "id": 3,
+            "text": "Sample third card text."
+          },
+          {
+            "id": 2,
+            "text": "Sample second card text."
+          },
+          {
+            "id": 1,
+            "text": "Sample first card text."
+          }
+        ],
+        "expandedId": null
+      }
+    },
+    {
+      "id": "history-one-expanded",
+      "name": "Entry Expanded",
+      "purpose": "Verify inline expansion animation, PaperCard display, chevron rotation, progress line with multiple entries.",
+      "priority": "p1",
+      "state": {
+        "entries": [
+          {
+            "id": 3,
+            "text": "Sample third card text."
+          },
+          {
+            "id": 2,
+            "text": "Sample second card text."
+          },
+          {
+            "id": 1,
+            "text": "Sample first card text."
+          }
+        ],
+        "expandedId": 2
+      }
+    }
+  ],
+  "_zkStateBundleSha256": "bd697dcb207eeb1455698aab067618e0d1ce0343463cc9c39910266b263fe296"
+}

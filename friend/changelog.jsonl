@@ -1,0 +1,1 @@
+{"version":1,"reason":"清空预置历史记录，首次打开从零开始；构建发布","task":"修改 /workspace/prototype/src/data/store.json：\n将第 4 行的 \"history\": [12, 34, 5, 27, 41, 18, 3] 改为 \"history\": []\n\n这样玩家首次打开时牌堆为空，从第一张开始抽，体验更自然。\n\n修改完成后运行构建并提交发布。"}

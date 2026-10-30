@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { BucketScene } from '@components/bucket-scene';
 import { FlipCard } from '@components/flip-card';
-import { useHomeStore } from '../stores/home.store';
+import { useCoupleStore } from '../stores/couple.store';
 
 /**
- * 孩子气·真心话大冒险 — 单页双状态 H5
+ * 孩子气·真心话 — 单页双状态 H5
  * 状态A(签桶):米白底 + 精简标题 + 签桶主角 + 提示小字 + 「点击抽签」胶囊按钮
  * 状态B(卡牌):深色纯底 + 3D 翻面卡牌(唯一主角)+ 弱化提示 + 「再抽一张」按钮
  *
@@ -36,25 +36,27 @@ function Sparkle({ className, style }: { className?: string; style?: React.CSSPr
   );
 }
 
-export default function HomePage() {
-  const screen = useHomeStore((s) => s.screen);
-  const drawPhase = useHomeStore((s) => s.drawPhase);
-  const stickIndex = useHomeStore((s) => s.stickIndex);
-  const flipped = useHomeStore((s) => s.flipped);
-  const drawCount = useHomeStore((s) => s.drawCount);
-  const recent = useHomeStore((s) => s.recent);
-  const draw = useHomeStore((s) => s.draw);
-  const reveal = useHomeStore((s) => s.reveal);
-  const flip = useHomeStore((s) => s.flip);
-  const beginReturn = useHomeStore((s) => s.beginReturn);
-  const finishReturn = useHomeStore((s) => s.finishReturn);
-  const sticks = useHomeStore((s) => s.sticks);
+export default function CouplePage() {
+  const screen = useCoupleStore((s) => s.screen);
+  const drawPhase = useCoupleStore((s) => s.drawPhase);
+  const stickIndex = useCoupleStore((s) => s.stickIndex);
+  const flipped = useCoupleStore((s) => s.flipped);
+  const drawCount = useCoupleStore((s) => s.drawCount);
+  const recent = useCoupleStore((s) => s.recent);
+  const draw = useCoupleStore((s) => s.draw);
+  const reveal = useCoupleStore((s) => s.reveal);
+  const flip = useCoupleStore((s) => s.flip);
+  const beginReturn = useCoupleStore((s) => s.beginReturn);
+  const finishReturn = useCoupleStore((s) => s.finishReturn);
+  const sticks = useCoupleStore((s) => s.sticks);
+  const loadSticks = useCoupleStore((s) => s.loadSticks);
 
   const timers = useRef<number[]>([]);
   useEffect(() => {
+    loadSticks();
     const stash = timers.current;
     return () => stash.forEach((t) => window.clearTimeout(t));
-  }, []);
+  }, [loadSticks]);
 
   const handleDraw = () => {
     if (drawPhase !== 'idle') return;
@@ -97,7 +99,7 @@ export default function HomePage() {
               letterSpacing: 'var(--letter-spacing-h3)',
             }}
           >
-            孩子气 · 真心话大冒险
+            孩子气 · 真心话
           </h1>
           <p className="font-zh text-caption text-text-secondary">抽一张,答一题</p>
         </header>
