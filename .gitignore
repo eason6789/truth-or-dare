@@ -11,3 +11,7 @@ dist/
 # 系统 / 日志
 .DS_Store
 *.log
+
+# 后端：生产配置含数据库密码，不提交；构建产物不提交
+backend/config/config.prod.json
+backend/bin/

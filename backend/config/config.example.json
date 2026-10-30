@@ -1,0 +1,5 @@
+{
+  "port": ":8084",
+  "env": "dev",
+  "db": "truth_or_dare:PASSWORD@tcp(127.0.0.1:3306)/truth_or_dare?charset=utf8mb4&timeout=5s"
+}

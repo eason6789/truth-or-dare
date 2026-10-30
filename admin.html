@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>真心话题库管理</title>
+    <style>
+        :root {
+            --bg: #000000;
+            --surface: #0a0a0a;
+            --surface-elevated: #141414;
+            --border: #262626;
+            --text: #ffffff;
+            --text-secondary: #737373;
+            --brand: #e5484d;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', 'Noto Sans SC', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+        header {
+            padding: 28px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        header h1 { font-size: 1.4rem; font-weight: 700; }
+        header .sub { color: var(--text-secondary); font-size: 0.85rem; margin-top: 4px; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--brand); color: #fff; border: none;
+            padding: 10px 18px; border-radius: 8px; cursor: pointer;
+            font-size: 0.9rem; font-weight: 600; transition: opacity 0.2s;
+        }
+        .btn:hover { opacity: 0.85; }
+        .btn.ghost { background: var(--surface-elevated); color: var(--text); border: 1px solid var(--border); }
+        .btn.danger { background: transparent; color: var(--brand); border: 1px solid var(--brand); }
+        .toolbar { display: flex; justify-content: space-between; align-items: center; margin: 20px 0 12px; flex-wrap: wrap; gap: 10px; }
+        .count { color: var(--text-secondary); font-size: 0.9rem; }
+        .list { display: flex; flex-direction: column; gap: 12px; }
+        .card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; padding: 16px 18px;
+            display: flex; justify-content: space-between; gap: 16px; align-items: flex-start;
+        }
+        .card .idx { color: var(--text-secondary); font-size: 0.8rem; min-width: 34px; padding-top: 2px; }
+        .card .body { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+        .face { display: flex; gap: 8px; align-items: baseline; }
+        .face .tag { font-size: 0.7rem; font-weight: 600; padding: 2px 8px; border-radius: 4px; flex-shrink: 0; }
+        .tag.front { background: rgba(255,255,255,0.08); color: var(--text-secondary); }
+        .tag.back { background: rgba(229,72,77,0.18); color: var(--brand); }
+        .face .q { font-size: 0.95rem; line-height: 1.5; }
+        .face .qe { font-size: 0.78rem; color: var(--text-secondary); }
+        .face .s { font-size: 0.78rem; color: #a0a0a0; }
+        .card .actions { display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
+        .card .actions .btn { padding: 6px 12px; font-size: 0.8rem; }
+        .modal-backdrop {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+            display: none; align-items: flex-start; justify-content: center;
+            padding: 40px 16px; z-index: 100; overflow-y: auto;
+        }
+        .modal-backdrop.open { display: flex; }
+        .modal {
+            background: var(--surface-elevated); border: 1px solid var(--border);
+            border-radius: 16px; width: 100%; max-width: 640px; padding: 24px;
+        }
+        .modal h2 { font-size: 1.1rem; margin-bottom: 20px; }
+        .field { margin-bottom: 14px; }
+        .field label { display: block; font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 6px; }
+        .field input, .field textarea {
+            width: 100%; background: var(--surface); color: var(--text);
+            border: 1px solid var(--border); border-radius: 8px;
+            padding: 10px 12px; font-size: 0.92rem; font-family: inherit; resize: vertical;
+        }
+        .field input:focus, .field textarea:focus { outline: none; border-color: var(--brand); }
+        .field .hint { font-size: 0.75rem; color: #555; margin-top: 4px; }
+        .face-block { border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 14px; }
+        .face-block h3 { font-size: 0.9rem; margin-bottom: 12px; }
+        .face-block h3 .tag { margin-right: 6px; }
+        .modal .actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px; }
+        .toast {
+            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+            background: #1d1d1d; border: 1px solid var(--border); color: var(--text);
+            padding: 10px 20px; border-radius: 8px; font-size: 0.85rem; z-index: 200;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s;
+        }
+        .toast.show { opacity: 1; }
+        .pw-backdrop {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.92);
+            display: flex; align-items: center; justify-content: center; z-index: 300; padding: 20px;
+        }
+        .pw-card {
+            background: var(--surface-elevated); border: 1px solid var(--border);
+            border-radius: 16px; padding: 28px; width: 100%; max-width: 320px;
+            display: flex; flex-direction: column; gap: 12px; text-align: center;
+        }
+        .pw-card h2 { font-size: 1.1rem; }
+        .pw-sub { color: var(--text-secondary); font-size: 0.85rem; }
+        .pw-card input {
+            width: 100%; background: var(--surface); color: var(--text);
+            border: 1px solid var(--border); border-radius: 8px; padding: 11px 12px;
+            font-size: 1rem; text-align: center; font-family: inherit;
+        }
+        .pw-card input:focus { outline: none; border-color: var(--brand); }
+        .pw-error { color: var(--brand); font-size: 0.8rem; min-height: 1em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <h1>真心话 · 题库管理</h1>
+                <div class="sub">在这里增删改「孩子气·真心话」的签面题目，保存后游戏端刷新即生效</div>
+            </div>
+            <button class="btn" onclick="openCreate()">＋ 新增一张签</button>
+        </header>
+
+        <div class="toolbar">
+            <span class="count" id="count">加载中…</span>
+            <button class="btn ghost" onclick="loadSticks()">刷新</button>
+        </div>
+
+        <div class="list" id="list"></div>
+    </div>
+
+    <div class="modal-backdrop" id="modalBackdrop">
+        <div class="modal">
+            <h2 id="modalTitle">新增一张签</h2>
+            <form id="stickForm" onsubmit="saveStick(event)">
+                <input type="hidden" id="f_id">
+                <div class="face-block">
+                    <h3><span class="tag front">正面</span>白面题</h3>
+                    <div class="field">
+                        <label>题目（必填）</label>
+                        <textarea id="f_front_q" rows="2" required placeholder="例如：你最喜欢的旅行地是哪里？"></textarea>
+                    </div>
+                    <div class="field">
+                        <label>英文副题</label>
+                        <input id="f_front_qe" placeholder="Where do you most want to travel?">
+                    </div>
+                    <div class="field">
+                        <label>替换词（用 、 分隔，可选）</label>
+                        <input id="f_front_s" placeholder="巴黎、东京、冰岛">
+                        <div class="hint">留空则不显示替换词区块</div>
+                    </div>
+                    <div class="field">
+                        <label>替换词英文</label>
+                        <input id="f_front_se" placeholder="Paris, Tokyo, Iceland">
+                    </div>
+                </div>
+                <div class="face-block">
+                    <h3><span class="tag back">反面</span>红面题</h3>
+                    <div class="field">
+                        <label>题目（必填）</label>
+                        <textarea id="f_back_q" rows="2" required placeholder="例如：你最想和谁一起去旅行？"></textarea>
+                    </div>
+                    <div class="field">
+                        <label>英文副题</label>
+                        <input id="f_back_qe" placeholder="Who do you most want to travel with?">
+                    </div>
+                    <div class="field">
+                        <label>替换词（用 、 分隔，可选）</label>
+                        <input id="f_back_s" placeholder="家人、恋人、朋友">
+                    </div>
+                    <div class="field">
+                        <label>替换词英文</label>
+                        <input id="f_back_se" placeholder="family, lover, friends">
+                    </div>
+                </div>
+                <div class="actions">
+                    <button type="button" class="btn ghost" onclick="closeModal()">取消</button>
+                    <button type="submit" class="btn">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="pw-backdrop" id="pwBackdrop">
+        <div class="pw-card">
+            <h2>需要密码</h2>
+            <p class="pw-sub">输入密码进入题库管理</p>
+            <input id="pwInput" type="password" placeholder="请输入密码" autocomplete="off">
+            <div class="pw-error" id="pwError"></div>
+            <button class="btn" id="pwBtn">进入</button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const API = '/truth-or-dare/api/sticks';
+        let sticks = [];
+
+        function $(id) { return document.getElementById(id); }
+
+        function toast(msg) {
+            const t = $('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            clearTimeout(t._timer);
+            t._timer = setTimeout(() => t.classList.remove('show'), 2000);
+        }
+
+        async function loadSticks() {
+            try {
+                const res = await fetch(API + '?edition=couple');
+                const json = await res.json();
+                sticks = json.data || [];
+                render();
+                $('count').textContent = '共 ' + sticks.length + ' 张签';
+            } catch (e) {
+                toast('加载失败：' + e.message);
+            }
+        }
+
+        function render() {
+            const list = $('list');
+            if (sticks.length === 0) {
+                list.innerHTML = '<div style="color:var(--text-secondary);padding:20px">暂无题目，点右上角新增。</div>';
+                return;
+            }
+            list.innerHTML = sticks.map((s, i) => {
+                const frontS = s.front.s ? '<div class="s">替换词：' + esc(s.front.s) + '</div>' : '';
+                const backS = s.back.s ? '<div class="s">替换词：' + esc(s.back.s) + '</div>' : '';
+                return '<div class="card">' +
+                    '<div class="idx">#' + (i + 1) + '</div>' +
+                    '<div class="body">' +
+                        '<div class="face"><span class="tag front">正面</span><div><div class="q">' + esc(s.front.q) + '</div>' +
+                            (s.front.qe ? '<div class="qe">' + esc(s.front.qe) + '</div>' : '') + frontS + '</div></div>' +
+                        '<div class="face"><span class="tag back">反面</span><div><div class="q">' + esc(s.back.q) + '</div>' +
+                            (s.back.qe ? '<div class="qe">' + esc(s.back.qe) + '</div>' : '') + backS + '</div></div>' +
+                    '</div>' +
+                    '<div class="actions">' +
+                        '<button class="btn ghost" onclick="openEdit(' + s.id + ')">编辑</button>' +
+                        '<button class="btn danger" onclick="deleteStick(' + s.id + ')">删除</button>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+        }
+
+        function esc(str) {
+            return String(str).replace(/[&<>"']/g, function (m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+            });
+        }
+
+        function openCreate() {
+            $('modalTitle').textContent = '新增一张签';
+            $('stickForm').reset();
+            $('f_id').value = '';
+            $('modalBackdrop').classList.add('open');
+        }
+
+        function openEdit(id) {
+            const s = sticks.find(x => x.id === id);
+            if (!s) return;
+            $('modalTitle').textContent = '编辑 #' + id;
+            $('f_id').value = s.id;
+            $('f_front_q').value = s.front.q || '';
+            $('f_front_qe').value = s.front.qe || '';
+            $('f_front_s').value = s.front.s || '';
+            $('f_front_se').value = s.front.se || '';
+            $('f_back_q').value = s.back.q || '';
+            $('f_back_qe').value = s.back.qe || '';
+            $('f_back_s').value = s.back.s || '';
+            $('f_back_se').value = s.back.se || '';
+            $('modalBackdrop').classList.add('open');
+        }
+
+        function closeModal() {
+            $('modalBackdrop').classList.remove('open');
+        }
+
+        async function saveStick(e) {
+            e.preventDefault();
+            const id = $('f_id').value;
+            const payload = {
+                edition: 'couple',
+                sort_order: 0,
+                front: {
+                    q: $('f_front_q').value.trim(),
+                    qe: $('f_front_qe').value.trim(),
+                    s: $('f_front_s').value.trim(),
+                    se: $('f_front_se').value.trim()
+                },
+                back: {
+                    q: $('f_back_q').value.trim(),
+                    qe: $('f_back_qe').value.trim(),
+                    s: $('f_back_s').value.trim(),
+                    se: $('f_back_se').value.trim()
+                }
+            };
+            try {
+                const res = await fetch(id ? API + '/' + id : API, {
+                    method: id ? 'PUT' : 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const json = await res.json();
+                if (!json.success) { toast(json.message || '保存失败'); return; }
+                toast(id ? '已更新' : '已新增');
+                closeModal();
+                loadSticks();
+            } catch (err) {
+                toast('保存失败：' + err.message);
+            }
+        }
+
+        async function deleteStick(id) {
+            if (!confirm('确定删除这张签吗？')) return;
+            try {
+                const res = await fetch(API + '/' + id, { method: 'DELETE' });
+                const json = await res.json();
+                if (!json.success) { toast(json.message || '删除失败'); return; }
+                toast('已删除');
+                loadSticks();
+            } catch (err) {
+                toast('删除失败：' + err.message);
+            }
+        }
+
+        $('modalBackdrop').addEventListener('click', function (e) {
+            if (e.target === this) closeModal();
+        });
+
+        // 密码门禁：进入管理页前先校验密码（默认 kidult）
+        const PASSWORD = 'kidult';
+        function checkPassword() {
+            const v = $('pwInput').value.trim();
+            if (v === PASSWORD) {
+                $('pwBackdrop').style.display = 'none';
+                loadSticks();
+            } else {
+                $('pwError').textContent = '密码错误，请重试';
+                $('pwInput').value = '';
+                $('pwInput').focus();
+            }
+        }
+        $('pwBtn').addEventListener('click', checkPassword);
+        $('pwInput').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') checkPassword();
+        });
+        $('pwInput').focus();
+    </script>
+</body>
+</html>
