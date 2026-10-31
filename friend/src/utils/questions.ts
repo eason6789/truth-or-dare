@@ -23,13 +23,13 @@ const readStore = (): StoreShape => {
 /** Questions loaded from the backend at runtime; null until a fetch succeeds. */
 let dbQuestions: Question[] | null = null;
 
-/** localStorage key for the friend edition's drawn-card history. */
+/** sessionStorage key：只保留本次会话（关页面即清空），不做跨会话持久化。 */
 const DRAWN_KEY = 'truth-or-dare:friend:drawnIds';
 
 const readDrawnFromStorage = (): number[] | null => {
   if (typeof window === 'undefined') return null;
   try {
-    const raw = window.localStorage.getItem(DRAWN_KEY);
+    const raw = window.sessionStorage.getItem(DRAWN_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed)
@@ -40,11 +40,11 @@ const readDrawnFromStorage = (): number[] | null => {
   }
 };
 
-/** Persist drawn card ids so 往期牌堆 survives full-page navigation. */
+/** 把本次抽过的牌暂存，供「往期牌堆」页在整页跳转后读取。 */
 export const saveDrawnIds = (ids: number[]): void => {
   if (typeof window === 'undefined') return;
   try {
-    window.localStorage.setItem(DRAWN_KEY, JSON.stringify(ids));
+    window.sessionStorage.setItem(DRAWN_KEY, JSON.stringify(ids));
   } catch {
     // 存储不可用时静默降级，游戏仍可用
   }
