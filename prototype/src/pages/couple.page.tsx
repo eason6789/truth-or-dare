@@ -169,6 +169,15 @@ export default function CouplePage() {
           >
             {drawing ? '抽签中…' : '点击抽签'}
           </button>
+          <a
+            href="http://tuteng3.site/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-zh text-caption font-bold text-text-secondary underline-offset-4 hover:underline"
+            style={{ opacity: 0.7 }}
+          >
+            ✉ 联系作者
+          </a>
         </footer>
       </div>
 

@@ -172,11 +172,19 @@ export default function EntryPage() {
         </button>
       </main>
 
-      {/* 底部小字 */}
+      {/* 底部小字 · 联系作者 */}
       <footer
-        className="flex justify-center px-comfortable"
+        className="flex flex-col items-center gap-micro px-comfortable"
         style={{ paddingBottom: 'max(var(--spacing-stack-md), env(safe-area-inset-bottom, 0px))' }}
       >
+        <a
+          href="http://tuteng3.site/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-zh text-caption font-bold text-brand-primary underline-offset-4 hover:underline"
+        >
+          ✉ 联系作者
+        </a>
         <p className="font-zh text-caption text-text-secondary" style={{ opacity: 0.7 }}>
           你这样看世界啊 · KIDULT
         </p>
