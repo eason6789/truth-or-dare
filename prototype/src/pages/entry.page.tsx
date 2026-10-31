@@ -119,7 +119,7 @@ export default function EntryPage() {
             <ArrowDoodle className="h-6 w-6 shrink-0" />
           </span>
           <span className="font-zh text-caption" style={{ opacity: 0.8 }}>
-            两个人的默契考验
+            灵魂的深度碰撞
           </span>
           <span
             className="mt-tight inline-flex items-center rounded-full bg-text-inverse font-zh text-caption font-bold text-brand-primary"
@@ -161,7 +161,7 @@ export default function EntryPage() {
             <ArrowDoodle className="h-6 w-6 shrink-0 text-text-secondary" />
           </span>
           <span className="font-zh text-caption text-text-secondary">
-            和朋友们的心动问答
+            照见彼此，也照见自己
           </span>
           <span
             className="mt-tight inline-flex items-center rounded-full bg-brand-primary font-zh text-caption font-bold text-text-inverse"
