@@ -3,6 +3,7 @@ import {
   getInitialHistory,
   getQuestions,
   loadQuestions as loadQuestionsFromDb,
+  saveDrawnIds,
 } from '../utils/questions';
 
 export type TablePhase = 'idle' | 'drawing' | 'skipping' | 'complete';
@@ -152,3 +153,8 @@ export const useTableStore = create<TableState>((set, get) => ({
     });
   },
 }));
+
+// 抽卡后把已抽记录写入 localStorage，这样「往期牌堆」在整页跳转后仍能看到
+useTableStore.subscribe((state, prev) => {
+  if (state.drawnIds !== prev.drawnIds) saveDrawnIds(state.drawnIds);
+});

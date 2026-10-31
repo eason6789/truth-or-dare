@@ -23,6 +23,33 @@ const readStore = (): StoreShape => {
 /** Questions loaded from the backend at runtime; null until a fetch succeeds. */
 let dbQuestions: Question[] | null = null;
 
+/** localStorage key for the friend edition's drawn-card history. */
+const DRAWN_KEY = 'truth-or-dare:friend:drawnIds';
+
+const readDrawnFromStorage = (): number[] | null => {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = window.localStorage.getItem(DRAWN_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed)
+      ? parsed.filter((n): n is number => typeof n === 'number')
+      : null;
+  } catch {
+    return null;
+  }
+};
+
+/** Persist drawn card ids so 往期牌堆 survives full-page navigation. */
+export const saveDrawnIds = (ids: number[]): void => {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(DRAWN_KEY, JSON.stringify(ids));
+  } catch {
+    // 存储不可用时静默降级，游戏仍可用
+  }
+};
+
 /** All question cards: DB-backed when loaded, otherwise the inline store.json questions. */
 export const getQuestions = (): Question[] => {
   if (dbQuestions && dbQuestions.length > 0) return dbQuestions;
@@ -33,8 +60,10 @@ export const getQuestions = (): Question[] => {
 export const getQuestionById = (id: number): Question | undefined =>
   getQuestions().find((q) => q.id === id);
 
-/** Preview history ids shipped in store.json (first launch looks like a session in progress). */
+/** Drawn history ids: localStorage first (real progress), else store.json preview. */
 export const getInitialHistory = (): number[] => {
+  const fromStorage = readDrawnFromStorage();
+  if (fromStorage !== null) return fromStorage;
   const list = readStore().history;
   return Array.isArray(list) ? list.filter((n) => typeof n === 'number') : [];
 };
