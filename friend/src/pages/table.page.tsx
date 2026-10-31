@@ -21,7 +21,7 @@ import {
   setSoundMuted,
 } from '../utils/sound';
 
-/** Spring for the drawn card settling onto the table — damped, heavy paper. */
+/** Spring for the settings sheet / toggle — damped, heavy paper. */
 const SETTLE_SPRING = { type: 'spring', stiffness: 300, damping: 25 } as const;
 const SKIP_EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -72,7 +72,6 @@ function Backdrop() {
 export default function TablePage() {
   const deck = useTableStore((s) => s.deck);
   const drawnIds = useTableStore((s) => s.drawnIds);
-  const activeId = useTableStore((s) => s.activeId);
   const outgoingId = useTableStore((s) => s.outgoingId);
   const phase = useTableStore((s) => s.phase);
   const soundOn = useTableStore((s) => s.soundOn);
@@ -125,9 +124,9 @@ export default function TablePage() {
   const flyX = useTransform(dragX, [0, 1], [0, 1]); // passthrough for skip flight
 
   const drawn = drawnIds.length;
-  const topId = activeId ?? deck[0] ?? null;
-  const underId = activeId !== null ? deck[0] ?? null : deck[1] ?? null;
-  const thirdId = activeId !== null ? deck[1] ?? null : deck[2] ?? null;
+  const topId = deck[0] ?? null;
+  const underId = deck[1] ?? null;
+  const thirdId = deck[2] ?? null;
   const idle = phase === 'idle';
   const total = getQuestions().length || 52;
   const hasCards = getQuestions().length > 0;
@@ -139,7 +138,7 @@ export default function TablePage() {
   };
 
   const commitSkip = () => {
-    if (!idle || activeId === null) return;
+    if (!idle || deck.length === 0) return;
     playWhoosh();
     beginSkip();
   };
@@ -221,7 +220,7 @@ export default function TablePage() {
                   if (!idle) return;
                   const upEnough = info.offset.y < -110 || info.velocity.y < -450;
                   const sideEnough =
-                    activeId !== null &&
+                    deck.length > 0 &&
                     (Math.abs(info.offset.x) > 120 || Math.abs(info.velocity.x) > 500);
                   if (upEnough) {
                     commitDraw();
@@ -242,16 +241,16 @@ export default function TablePage() {
               </motion.div>
             )}
 
-            {/* outgoing card — draw settle / skip fly-out */}
+            {/* outgoing card — draw fly-out (up) / skip fly-out (sideways) */}
             <AnimatePresence>
               {phase === 'drawing' && outgoingId !== null && (
                 <motion.div
                   key={`draw-${outgoingId}`}
                   className="absolute inset-0 z-20"
-                  initial={{ y: '-118%', rotate: -2, scale: 1.02, opacity: 0.96 }}
-                  animate={{ y: 0, rotate: 0, scale: 1, opacity: 1 }}
+                  initial={{ y: 0, rotate: 0, scale: 1, opacity: 1 }}
+                  animate={{ y: '-118%', rotate: -3, scale: 1.02, opacity: 0.9 }}
                   exit={{ opacity: 0 }}
-                  transition={SETTLE_SPRING}
+                  transition={{ duration: 0.38, ease: SKIP_EASE }}
                   onAnimationComplete={() => {
                     playSettle();
                     settleDraw();
@@ -317,7 +316,7 @@ export default function TablePage() {
           </div>
 
           {/* gesture hint — only before the very first draw */}
-          {idle && drawn === 0 && activeId === null && hasCards && (
+          {idle && drawn === 0 && hasCards && (
             <motion.p
               className="mt-stack-md flex items-center gap-tight font-zh text-caption tracking-widest text-text-muted"
               initial={{ opacity: 0 }}

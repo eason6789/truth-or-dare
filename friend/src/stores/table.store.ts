@@ -8,13 +8,11 @@ import {
 export type TablePhase = 'idle' | 'drawing' | 'skipping' | 'complete';
 
 interface TableState {
-  /** Undrawn card ids, shuffled; index 0 is the top of the pile. */
+  /** Card ids remaining in the pile, shuffled; index 0 is the top (current) card. */
   deck: number[];
-  /** Drawn card ids, oldest first. */
+  /** Cards dismissed upward (drawn), oldest first. */
   drawnIds: number[];
-  /** Card currently lifted above the pile (settled once, waiting for next draw). */
-  activeId: number | null;
-  /** Card currently animating (draw settle or skip fly-out). */
+  /** Card currently animating (draw fly-out or skip fly-out). */
   outgoingId: number | null;
   phase: TablePhase;
   soundOn: boolean;
@@ -57,7 +55,6 @@ const initial = buildInitialDeck();
 export const useTableStore = create<TableState>((set, get) => ({
   deck: initial.deck,
   drawnIds: initial.drawnIds,
-  activeId: null,
   outgoingId: null,
   phase: initial.deck.length === 0 ? 'complete' : 'idle',
   soundOn: true,
@@ -68,35 +65,32 @@ export const useTableStore = create<TableState>((set, get) => ({
   beginDraw: () =>
     set((state) => {
       if (state.phase !== 'idle' || state.deck.length === 0) return state;
-      const [next, ...rest] = state.deck;
-      return {
-        ...state,
-        deck: rest,
-        outgoingId: next,
-        phase: 'drawing',
-      };
+      // 顶部（当前）那张牌向上滑走，露出下一张
+      const [top, ...rest] = state.deck;
+      return { ...state, deck: rest, outgoingId: top, phase: 'drawing' };
     }),
 
   settleDraw: () =>
     set((state) => {
       if (state.phase !== 'drawing' || state.outgoingId === null) return state;
-      const landed = state.outgoingId;
-      const drawnIds = state.drawnIds.includes(landed)
+      const dismissed = state.outgoingId;
+      const drawnIds = state.drawnIds.includes(dismissed)
         ? state.drawnIds
-        : [...state.drawnIds, landed];
+        : [...state.drawnIds, dismissed];
       return {
         ...state,
-        activeId: landed,
-        outgoingId: null,
         drawnIds,
+        outgoingId: null,
         phase: state.deck.length === 0 ? 'complete' : 'idle',
       };
     }),
 
   beginSkip: () =>
     set((state) => {
-      if (state.phase !== 'idle' || state.activeId === null) return state;
-      return { ...state, outgoingId: state.activeId, activeId: null, phase: 'skipping' };
+      if (state.phase !== 'idle' || state.deck.length === 0) return state;
+      // 顶部那张牌左右滑走（切题），稍后回到牌堆底部
+      const [top, ...rest] = state.deck;
+      return { ...state, deck: rest, outgoingId: top, phase: 'skipping' };
     }),
 
   settleSkip: () =>
@@ -134,7 +128,6 @@ export const useTableStore = create<TableState>((set, get) => ({
       ...state,
       deck: shuffle(allIds),
       drawnIds: [],
-      activeId: null,
       outgoingId: null,
       phase: 'idle',
       resetArmed: false,
